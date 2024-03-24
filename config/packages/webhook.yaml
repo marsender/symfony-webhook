@@ -1,0 +1,6 @@
+framework:
+  webhook:
+    routing:
+      # The webhook routing name must be unique and is part of the URL, eg: /webhook/github
+      github:
+        service: App\Webhook\GithubWebhookParser
