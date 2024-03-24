@@ -8,9 +8,9 @@ use Symfony\Component\RemoteEvent\RemoteEvent;
 #[AsRemoteEventConsumer(name: 'github_callback.event')]
 class GithubConsumer
 {
-	public function consume(RemoteEvent $event): void
+	public function consume(RemoteEvent $remoteEvent): void
 	{
-		$payload = $event->getPayload();
+		$remoteEvent->getPayload();
 		// Process the event returned by our parser
 	}
 }
