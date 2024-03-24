@@ -1,5 +1,6 @@
+# see https://symfony.com/doc/current/routing.html
 controllers:
-    resource:
-        path: ../src/Controller/
-        namespace: App\Controller
-    type: attribute
+  resource:
+    path: ../src/Controller/
+    namespace: App\Controller
+  type: attribute
