@@ -42,6 +42,7 @@
 		"symfony/ux-turbo": "^2.16",
 		"symfony/validator": "7.0.*",
 		"symfony/web-link": "7.0.*",
+		"symfony/webhook": "7.0.*",
 		"symfony/yaml": "7.0.*",
 		"twig/extra-bundle": "^2.12|^3.0",
 		"twig/twig": "^2.12|^3.0"
@@ -92,8 +93,14 @@
 		"cache-clear": [
 			"sudo -u www-data bin/console cache:clear && sudo -u www-data bin/console cache:warmup"
 		],
+		"test": [
+			"./bin/phpunit -c ./phpunit.xml"
+		],
 		"cs-fixer": [
 			"vendor/bin/php-cs-fixer fix --allow-risky=yes --using-cache=no --config .php-cs-fixer.php src tests"
+		],
+		"rector": [
+			"vendor/bin/rector process"
 		]
 	},
 	"conflict": {
@@ -107,7 +114,7 @@
 	},
 	"require-dev": {
 		"friendsofphp/php-cs-fixer": "^3.52",
-		"phpunit/phpunit": "^9.5",
+		"phpunit/phpunit": "^10.5",
 		"symfony/browser-kit": "7.0.*",
 		"symfony/css-selector": "7.0.*",
 		"symfony/debug-bundle": "7.0.*",
