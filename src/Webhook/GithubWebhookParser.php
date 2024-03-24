@@ -19,7 +19,7 @@ final class GithubWebhookParser extends AbstractRequestParser
 		// these define the conditions that the incoming webhook request
 		// must match in order to be handled by this parser
 		return new ChainRequestMatcher([
-			new HostRequestMatcher('github.com'),
+			// new HostRequestMatcher('github.com'),
 			new IsJsonRequestMatcher(),
 			new MethodRequestMatcher('POST'),
 		]);
@@ -27,17 +27,20 @@ final class GithubWebhookParser extends AbstractRequestParser
 
 	protected function doParse(Request $request, string $secret): ?RemoteEvent
 	{
-		// in this method you check the request payload to see if it contains
-		// the needed information to process this webhook
-		// $content = $request->toArray();
-		// if (!isset($content['signature']['token'])) {
-		// 	throw new RejectWebhookException(406, 'Payload is malformed.');
-		// }
-
+		// Use toArray if it's not json
+		// $eventData = $request->toArray();
 		$data = $request->getContent();
 		$eventData = json_decode($data, true);
 
+		$hookId = $eventData['hook_id'] ?? null;
+		if (null === $hookId) {
+			throw new RejectWebhookException(406, 'Webhook has no id.');
+		}
+		if (!isset($eventData['repository']['name'])) {
+			throw new RejectWebhookException(406, 'Webhook payload is malformed.');
+		}
+
 		// you can either return `null` or a `RemoteEvent` object
-		return new RemoteEvent('github_callback.event', 'event-id', $eventData);
+		return new RemoteEvent('github', $hookId, $eventData);
 	}
 }

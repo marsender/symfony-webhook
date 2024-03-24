@@ -4,6 +4,7 @@ namespace tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class GithubWebhookTest extends WebTestCase
 {
@@ -23,7 +24,7 @@ class GithubWebhookTest extends WebTestCase
 		$this->kernelBrowser->request('POST', '/webhook/github', [], [], [], json_encode($data));
 
 		$statusCode = $this->kernelBrowser->getResponse()->getStatusCode();
-		$this->assertEquals(200, $statusCode);
+		$this->assertEquals(Response::HTTP_ACCEPTED, $statusCode);
 	}
 
 	private function getPayloadData(): array
