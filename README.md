@@ -1,5 +1,8 @@
 # symfony-webhook
 
+![CI](https://github.com/marsender/symfony-webhook/workflows/CI/badge.svg)
+![Code Coverage](https://github.com/marsender/symfony-webhook/raw/main/.github/badges/coverage.svg)
+
 This project is a starter webapp with Symfony 7 to setup webhooks.
 
 References :
