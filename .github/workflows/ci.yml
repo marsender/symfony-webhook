@@ -60,7 +60,7 @@ jobs:
       -
         name: Run PHPUnit
         if: false # Remove this line if PHPUnit is installed
-        run: docker compose exec -T php bin/phpunit
+        run: docker compose exec -T php bin/phpunit -c ./phpunit.xml --exclude-group no-ci --no-coverage
       -
         name: Doctrine Schema Validator
         if: false # Remove this line if Doctrine ORM is installed
