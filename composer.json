@@ -14,6 +14,7 @@
 		"doctrine/orm": "^3.1",
 		"phpdocumentor/reflection-docblock": "^5.3",
 		"phpstan/phpdoc-parser": "^1.27",
+		"runtime/frankenphp-symfony": "^0.2.0",
 		"symfony/asset": "7.0.*",
 		"symfony/asset-mapper": "7.0.*",
 		"symfony/console": "7.0.*",
@@ -94,7 +95,10 @@
 			"sudo -u www-data bin/console cache:clear && sudo -u www-data bin/console cache:warmup"
 		],
 		"test": [
-			"./bin/phpunit -c ./phpunit.xml"
+			"if php -m | grep -q 'xdebug'; then ./bin/phpunit -c ./phpunit.xml --exclude-group failure --coverage-clover var/coverage/coverage.xml && vendor/bin/php-coverage-badger var/coverage/coverage.xml .github/badges/coverage.svg; else ./bin/phpunit -c ./phpunit.xml --exclude-group failure --no-coverage; fi"
+		],
+		"fixtures": [
+			"bin/console doctrine:fixtures:load --env=test --purger=fixtures_purger -n"
 		],
 		"cs-fixer": [
 			"vendor/bin/php-cs-fixer fix --allow-risky=yes --using-cache=no --config .php-cs-fixer.php src tests"
@@ -108,8 +112,9 @@
 	},
 	"extra": {
 		"symfony": {
-			"allow-contrib": false,
-			"require": "7.0.*"
+			"allow-contrib": true,
+			"require": "7.0.*",
+			"docker": true
 		}
 	},
 	"require-dev": {
