@@ -11,6 +11,8 @@ class GithubConsumer implements ConsumerInterface
 {
 	public function consume(RemoteEvent $remoteEvent): void
 	{
+		$remoteEvent->getId();
+		$remoteEvent->getName();
 		$remoteEvent->getPayload();
 		// Process the event returned by the parser
 	}

@@ -32,10 +32,12 @@ final class GithubWebhookParser extends AbstractRequestParser
 	 */
 	protected function doParse(Request $request, string $secret): ?RemoteEvent
 	{
-		// Use toArray if it's not json
-		// $eventData = $request->toArray();
 		$data = $request->getContent();
-		$eventData = json_decode($data, true);
+		if (is_string($data)) {
+			$eventData = json_decode($data, true, 512, JSON_THROW_ON_ERROR);
+		} else {
+			$eventData = $request->toArray();
+		}
 
 		$sender = $eventData['sender']['login'] ?? null;
 		if (null === $sender) {
@@ -47,7 +49,6 @@ final class GithubWebhookParser extends AbstractRequestParser
 			throw new RejectWebhookException(406, 'Webhook has no repository name');
 		}
 
-		// you can either return `null` or a `RemoteEvent` object
-		return new RemoteEvent('github', $sender, $eventData);
+		return new RemoteEvent($repositoryName, $sender, $eventData);
 	}
 }
