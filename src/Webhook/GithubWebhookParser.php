@@ -25,6 +25,11 @@ final class GithubWebhookParser extends AbstractRequestParser
 		]);
 	}
 
+	/**
+	 * Webhook parsing and validation.
+	 *
+	 * @see https://docs.github.com/en/webhooks
+	 */
 	protected function doParse(Request $request, string $secret): ?RemoteEvent
 	{
 		// Use toArray if it's not json
@@ -32,15 +37,17 @@ final class GithubWebhookParser extends AbstractRequestParser
 		$data = $request->getContent();
 		$eventData = json_decode($data, true);
 
-		$hookId = $eventData['hook_id'] ?? null;
-		if (null === $hookId) {
-			throw new RejectWebhookException(406, 'Webhook has no id.');
+		$sender = $eventData['sender']['login'] ?? null;
+		if (null === $sender) {
+			throw new RejectWebhookException(406, 'Webhook has no sender login');
 		}
-		if (!isset($eventData['repository']['name'])) {
-			throw new RejectWebhookException(406, 'Webhook payload is malformed.');
+
+		$repositoryName = $eventData['repository']['full_name'] ?? null;
+		if (null === $repositoryName) {
+			throw new RejectWebhookException(406, 'Webhook has no repository name');
 		}
 
 		// you can either return `null` or a `RemoteEvent` object
-		return new RemoteEvent('github', $hookId, $eventData);
+		return new RemoteEvent('github', $sender, $eventData);
 	}
 }
