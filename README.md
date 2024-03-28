@@ -89,6 +89,12 @@ Open the app in your browser [http://symfony-webhook.localhost/](http://symfony-
 
 # Delopper instructions
 
+## Install ES Module Shims for older browsers compatibility
+
+```bash
+bin/console importmap:require es-module-shims
+```
+
 ## Symfony Docker
 
 If not already done, [install Docker Compose](https://docs.docker.com/compose/install/) (v2.10+)

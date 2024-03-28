@@ -91,7 +91,7 @@
 			"@auto-scripts"
 		],
 		"deploy": [
-			"composer cache-clear; bin/console asset-map:compile"
+			"composer cache-clear; rm -rf public/assets; bin/console asset-map:compile"
 		],
 		"cache-clear": [
 			"sudo -u www-data bin/console cache:clear && sudo -u www-data bin/console cache:warmup"
