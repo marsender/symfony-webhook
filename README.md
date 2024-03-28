@@ -34,6 +34,11 @@ composer install
 sudo chown -R www-data:$USER var
 ```
 
+Install importmap vendor files
+```bash
+bin/console importmap:install
+```
+
 Add project host
 ```bash
 sudo nano /etc/hosts
@@ -88,6 +93,21 @@ composer deploy
 Open the app in your browser [http://symfony-webhook.localhost/](http://symfony-webhook.localhost/)
 
 # Delopper instructions
+
+## Debugging: Seeing All Mapped Assets
+
+```bash
+bin/console debug:asset-map --full
+```
+
+## Update importmap packages
+
+```bash
+# List outedated packages
+bin/console importmap:outdated
+# Update oudated packages
+bin/console importmap:update # add packagename to update only one package
+```
 
 ## Install ES Module Shims for older browsers compatibility
 
