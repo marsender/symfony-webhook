@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block body_id 'test' %}
+
+{% block title %}
+	{{ 'test.title'|trans }}
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<div class="page-header">
+			<h1>{{ 'test.title'|trans }}</h1>
+		</div>
+		<div class="page-content">
+			<ul>
+				{% for item in items %}
+					{% set path = 'app_test_' ~ item %}
+					<li>
+						<a href="{{ path(path) }}">
+							Test
+							{{ item }}
+						</a>
+					</li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+{% endblock %}
