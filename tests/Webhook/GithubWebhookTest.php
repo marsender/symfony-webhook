@@ -21,23 +21,13 @@ class GithubWebhookTest extends WebTestCase
 
 		$i = 0;
 		while (true) {
-			switch (++$i) {
-				case 1:
-					$payload = $this->getPingPayload();
-					break;
-				case 2:
-					$payload = $this->getIssueAssignedPayload();
-					break;
-				case 3:
-					$payload = $this->getIssueOpenPayload();
-					break;
-				case 4:
-					$payload = $this->getIssueClosedPayload();
-					break;
-				default:
-					$payload = null;
-					break;
-			}
+			$payload = match (++$i) {
+       1 => $this->getPingPayload(),
+       2 => $this->getIssueAssignedPayload(),
+       3 => $this->getIssueOpenPayload(),
+       4 => $this->getIssueClosedPayload(),
+       default => null,
+   };
 			if (null === $payload) {
 				break;
 			}

@@ -33,11 +33,7 @@ final class GithubWebhookParser extends AbstractRequestParser
 	protected function doParse(Request $request, string $secret): ?RemoteEvent
 	{
 		$data = $request->getContent();
-		if (is_string($data)) {
-			$eventData = json_decode($data, true, 512, JSON_THROW_ON_ERROR);
-		} else {
-			$eventData = $request->toArray();
-		}
+		$eventData = is_string($data) ? json_decode($data, true, 512, JSON_THROW_ON_ERROR) : $request->toArray();
 
 		$sender = $eventData['sender']['login'] ?? null;
 		if (null === $sender) {

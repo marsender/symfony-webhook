@@ -7,7 +7,7 @@ use Psr\Log\LoggerInterface;
 
 class ConsumeGithubIssueService
 {
-	private $client;
+	private readonly Client $client;
 
 	public function __construct(private readonly LoggerInterface $logger)
 	{
@@ -25,7 +25,7 @@ class ConsumeGithubIssueService
 		$this->consumeWebhook($url);
 	}
 
-	private function consumeWebhook(string $issueUrl)
+	private function consumeWebhook(string $issueUrl): void
 	{
 		try {
 			$response = $this->client->request('GET', $issueUrl);
