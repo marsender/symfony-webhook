@@ -12,6 +12,7 @@
 		"doctrine/doctrine-bundle": "^2.12",
 		"doctrine/doctrine-migrations-bundle": "^3.3",
 		"doctrine/orm": "^3.1",
+		"guzzlehttp/guzzle": "^7.8",
 		"phpdocumentor/reflection-docblock": "^5.3",
 		"phpstan/phpdoc-parser": "^1.27",
 		"runtime/frankenphp-symfony": "^0.2.0",
@@ -94,7 +95,7 @@
 			"composer cache-clear; rm -rf public/assets; bin/console asset-map:compile"
 		],
 		"cache-clear": [
-			"sudo -u www-data bin/console cache:clear && sudo -u www-data bin/console cache:warmup"
+			"sudo -u www-data bin/console cache:clear"
 		],
 		"test": [
 			"if php -m | grep -q 'xdebug'; then ./bin/phpunit -c ./phpunit.xml --exclude-group failure --coverage-clover var/coverage/coverage.xml && vendor/bin/php-coverage-badger var/coverage/coverage.xml .github/badges/coverage.svg; else ./bin/phpunit -c ./phpunit.xml --exclude-group failure --no-coverage; fi"
