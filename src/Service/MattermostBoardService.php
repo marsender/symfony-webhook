@@ -7,6 +7,11 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
+/**
+ * Call mattermost board api.
+ *
+ * @see https://htmlpreview.github.io/?https://github.com/mattermost/focalboard/blob/main/server/swagger/docs/html/index.html
+ */
 class MattermostBoardService
 {
 	private const authTokenPattern = 'MMAUTHTOKEN=';
@@ -33,7 +38,7 @@ class MattermostBoardService
 			'QDZantoine' => 't4wjf6qs47gb3qcpceysxaq6de',
 		];
 
-		$repo = 'alveos/easylibrary_back';
+		$repo = 'Alveos/easylibrary_back';
 		$data = [
 			'boardId' => 'b8crmfdz4jtgt3rzeogww9tzqxc',
 			'createdBy' => $createdBy,
