@@ -32,7 +32,7 @@ class GithubConsumer implements ConsumerInterface
 
 		$data = [];
 		$data['repository'] = $remoteEvent->getName();
-		$data['sender'] = $remoteEvent->getId();
+		$data['user'] = $remoteEvent->getId();
 
 		$action = $this->payload['action'] ?? null;
 		if (null === $action) {
