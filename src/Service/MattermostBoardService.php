@@ -5,30 +5,40 @@ namespace App\Service;
 use GuzzleHttp\Client;
 use Psr\Log\LoggerInterface;
 
-class ConsumeGithubIssueService
+class MattermostBoardService
 {
 	private readonly Client $client;
+
+	private array $issue;
 
 	public function __construct(private readonly LoggerInterface $logger)
 	{
 		$this->client = new Client(); // Initialize Guzzle client
 	}
 
-	public function consume(string $action, array $issue): void
+	public function consume(array $issue): void
 	{
-		$title = $issue['title'] ?? null;
-		if (null === $title) {
-			throw new \LogicException('Issue title is not set');
-		}
+		$this->issue = $issue;
 
-		$url = 'http://ratio-force.localhost/fr/';
-		$this->consumeWebhook($url);
+		$action = $this->issue['action'] ?? null;
+
+		switch ($action) {
+			case 'opened':
+				$this->createCard();
+				break;
+			case 'assigned':
+			case 'closed':
+			default:
+				return;
+		}
 	}
 
-	private function consumeWebhook(string $issueUrl): void
+	private function createCard(): void
 	{
+		$boardUrl = 'http://ratio-force.localhost/fr/';
+
 		try {
-			$response = $this->client->request('GET', $issueUrl);
+			$response = $this->client->request('GET', $boardUrl);
 
 			if (200 == $response->getStatusCode()) {
 				$data = json_decode($response->getBody(), true);
