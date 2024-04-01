@@ -42,32 +42,7 @@ class MattermostBoardService
 				'statusKey' => 'ajexcf358qpw6bwhtpsapucbk3e',
 				'statusValue' => 'a6fd8iyp33t9ckgbrorwbep4j6e',
 				'urlKey' => 'ac95t57ir869uacidk3w3dwf8qh',
-			],
-		];
-		$this->config[$repo] = $data;
-
-		$repo = 'marsender/symfony-webhook';
-		$data = [
-			'boardId' => 'bnun4wowr4inf8ebeh4mrcyx6cc',
-			'createdBy' => $createdBy,
-			'properties' => [
-				'dateKey' => 'adhstgkj3usbw5ne6kaziwrdhbh',
-				'statusKey' => 'adj7gm9wxsy1w61hfksxzkce75h',
-				'statusValue' => 'a59obmejixs19cefych19kyxmaw',
-				'urlKey' => 'a45oaj4wx8k6j5h9wbc769neqga',
-			],
-		];
-		$this->config[$repo] = $data;
-
-		$repo = 'marsender/ratio-force';
-		$data = [
-			'boardId' => 'b3t3dne4jgff4mriw9igyafyuur',
-			'createdBy' => $createdBy,
-			'properties' => [
-				'dateKey' => 'aiz9t6wz5bfzf7n5q99big9344c',
-				'statusKey' => 'auixkgzpweq77d7x9b98cw6gw3e',
-				'statusValue' => 'a3sa3y94o1y3onhwotuzqxcxhdc',
-				'urlKey' => 'a5ry3q77jraod5dk9od4sdk318c',
+				'assignedKey' => 'auzf4n7979j895njp7qw7i3hpto',
 			],
 		];
 		$this->config[$repo] = $data;
@@ -81,8 +56,39 @@ class MattermostBoardService
 				'statusKey' => 'ap4cno3hufwtzrwjyt6jusihrzy',
 				'statusValue' => 'ayfyddrgs7bq5zsjn6d146ox78c',
 				'urlKey' => 'a51xn7pcmdyp7zepzuxfbqgaxur',
+				'assignedKey' => 'ay6zw4ohtou871oeb9364kfsm4w',
 			],
 		];
+		$this->config[$repo] = $data;
+
+		$repo = 'marsender/ratio-force';
+		$data = [
+			'boardId' => 'b3t3dne4jgff4mriw9igyafyuur',
+			'createdBy' => $createdBy,
+			'properties' => [
+				'dateKey' => 'aiz9t6wz5bfzf7n5q99big9344c',
+				'statusKey' => 'auixkgzpweq77d7x9b98cw6gw3e',
+				'statusValue' => 'a3sa3y94o1y3onhwotuzqxcxhdc',
+				'urlKey' => 'a5ry3q77jraod5dk9od4sdk318c',
+				'assignedKey' => 'aukh6okxkwqibjo1ychphp4yx1a',
+			],
+		];
+		$this->config[$repo] = $data;
+
+		$repo = 'marsender/symfony-webhook';
+		$data = [
+			'boardId' => 'bnun4wowr4inf8ebeh4mrcyx6cc',
+			'createdBy' => $createdBy,
+			'properties' => [
+				'dateKey' => 'adhstgkj3usbw5ne6kaziwrdhbh',
+				'statusKey' => 'adj7gm9wxsy1w61hfksxzkce75h',
+				'statusValue' => 'a59obmejixs19cefych19kyxmaw',
+				'urlKey' => 'a45oaj4wx8k6j5h9wbc769neqga',
+				'assignedKey' => 'asyzr433wkogfectua9rnh894zr',
+			],
+		];
+		$this->config[$repo] = $data;
+		$repo = 'symfony-assetmapper';
 		$this->config[$repo] = $data;
 	}
 
@@ -299,6 +305,7 @@ class MattermostBoardService
 			$properties['statusKey'] => $properties['statusValue'],
 			$properties['dateKey'] => json_encode(['from' => $dateTimestamp]),
 			$properties['urlKey'] => $issueUrl,
+			$properties['assignedKey'] => [$this->getCreatedBy()],
 		];
 
 		return $res;
