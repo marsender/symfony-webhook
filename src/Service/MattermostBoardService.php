@@ -93,7 +93,7 @@ class MattermostBoardService
 			],
 		];
 		$this->config[$repo] = $data;
-		$repo = 'symfony-assetmapper';
+		$repo = 'marsender/symfony-assetmapper';
 		$this->config[$repo] = $data;
 	}
 
