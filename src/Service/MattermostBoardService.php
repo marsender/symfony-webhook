@@ -5,6 +5,7 @@ namespace App\Service;
 // use GuzzleHttp\Client;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Yaml\Yaml;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
@@ -24,77 +25,14 @@ class MattermostBoardService
 	public function __construct(
 		private readonly HttpClientInterface $client,
 		private readonly LoggerInterface $logger,
+		private readonly string $projectDir,
 		private readonly string $mattermostApiUrl,
 		private readonly string $mattermostAuthToken,
 		private readonly string $mattermostLoginUser,
 		private readonly string $mattermostLoginPassword,
-		private readonly string $mattermostBoardApiUrl
+		private readonly string $mattermostBoardApiUrl,
+		private readonly string $mattermostBoardConfig
 	) {
-		// Set a config per github repository
-		$this->config = [];
-
-		$createdBy = [
-			'marsender' => 'ynrzgwid4bb3jgn377jqsoy8oc',
-			'QDZantoine' => 't4wjf6qs47gb3qcpceysxaq6de',
-		];
-
-		$repo = 'Alveos/easylibrary_back';
-		$data = [
-			'boardId' => 'b8crmfdz4jtgt3rzeogww9tzqxc',
-			'createdBy' => $createdBy,
-			'properties' => [
-				'dateKey' => 'a9ieh4p9kmq17fynqyspioi5b5w',
-				'statusKey' => 'ajexcf358qpw6bwhtpsapucbk3e',
-				'statusValue' => 'a6fd8iyp33t9ckgbrorwbep4j6e',
-				'urlKey' => 'ac95t57ir869uacidk3w3dwf8qh',
-				'assignedKey' => 'auzf4n7979j895njp7qw7i3hpto',
-			],
-		];
-		$this->config[$repo] = $data;
-
-		$repo = 'QDZantoine/spot-to-work';
-		$data = [
-			'boardId' => 'bttz8yzp5htbgdgwbm3a8aszf7a',
-			'createdBy' => $createdBy,
-			'properties' => [
-				'dateKey' => 'a5m9ngza95egtm64nww3w9agjja',
-				'statusKey' => 'ap4cno3hufwtzrwjyt6jusihrzy',
-				'statusValue' => 'ayfyddrgs7bq5zsjn6d146ox78c',
-				'urlKey' => 'a51xn7pcmdyp7zepzuxfbqgaxur',
-				'assignedKey' => 'ay6zw4ohtou871oeb9364kfsm4w',
-			],
-		];
-		$this->config[$repo] = $data;
-
-		$repo = 'marsender/ratio-force';
-		$data = [
-			'boardId' => 'b3t3dne4jgff4mriw9igyafyuur',
-			'createdBy' => $createdBy,
-			'properties' => [
-				'dateKey' => 'aiz9t6wz5bfzf7n5q99big9344c',
-				'statusKey' => 'auixkgzpweq77d7x9b98cw6gw3e',
-				'statusValue' => 'a3sa3y94o1y3onhwotuzqxcxhdc',
-				'urlKey' => 'a5ry3q77jraod5dk9od4sdk318c',
-				'assignedKey' => 'aukh6okxkwqibjo1ychphp4yx1a',
-			],
-		];
-		$this->config[$repo] = $data;
-
-		$repo = 'marsender/symfony-webhook';
-		$data = [
-			'boardId' => 'bnun4wowr4inf8ebeh4mrcyx6cc',
-			'createdBy' => $createdBy,
-			'properties' => [
-				'dateKey' => 'adhstgkj3usbw5ne6kaziwrdhbh',
-				'statusKey' => 'adj7gm9wxsy1w61hfksxzkce75h',
-				'statusValue' => 'a59obmejixs19cefych19kyxmaw',
-				'urlKey' => 'a45oaj4wx8k6j5h9wbc769neqga',
-				'assignedKey' => 'asyzr433wkogfectua9rnh894zr',
-			],
-		];
-		$this->config[$repo] = $data;
-		$repo = 'marsender/symfony-assetmapper';
-		$this->config[$repo] = $data;
 	}
 
 	public function consume(array $issue): bool
@@ -116,6 +54,23 @@ class MattermostBoardService
 		}
 
 		return $res;
+	}
+
+	private function loadConfig(): bool
+	{
+		$filePath = sprintf('%s/%s', $this->projectDir, $this->mattermostBoardConfig);
+
+		try {
+			$this->config = Yaml::parseFile($filePath);
+		} catch (\Exception $e) {
+			$this->logger->error('Mattermost load config exception', [
+				'message' => $e->getMessage(),
+			]);
+
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -188,6 +143,8 @@ class MattermostBoardService
 				'message' => $e->getMessage(),
 				'trace' => $e->getTraceAsString(),
 			]);
+
+			return null;
 		}
 
 		return $authToken;
@@ -217,17 +174,23 @@ class MattermostBoardService
 	 */
 	private function createCard(): bool
 	{
+		if (!$this->loadConfig()) {
+			return false;
+		}
+
 		$authToken = $this->getAuthenticationToken();
 		if (null === $authToken) {
 			return false;
 		}
 
-		$this->setBoardConfig();
-		if (null === $this->boardConfig) {
+		if (!$this->setBoardConfig()) {
 			return false;
 		}
 
 		$boardId = $this->getBoardId();
+		if (empty($boardId)) {
+			return false;
+		}
 		$url = sprintf('%s/boards/%s/cards', $this->mattermostBoardApiUrl, $boardId);
 
 		$card = [];
@@ -258,7 +221,6 @@ class MattermostBoardService
 		} catch (\Exception $e) {
 			$this->logger->error('Mattermost create card exception', [
 				'message' => $e->getMessage(),
-				// 'trace' => $e->getTraceAsString(),
 			]);
 
 			return false;
@@ -272,11 +234,21 @@ class MattermostBoardService
 		return true;
 	}
 
-	private function setBoardConfig(): void
+	private function setBoardConfig(): bool
 	{
 		$repository = $this->issue['repository'];
 
-		$this->boardConfig = $this->config[$repository] ?? null;
+		$boardConfig = $this->config['repos'][$repository] ?? null;
+		if (is_string($boardConfig)) {
+			$boardConfig = $this->config['repos'][$boardConfig] ?? null;
+		}
+		if (null === $boardConfig) {
+			return false;
+		}
+
+		$this->boardConfig = $boardConfig;
+
+		return true;
 	}
 
 	/**
@@ -293,7 +265,7 @@ class MattermostBoardService
 	{
 		$user = $this->issue['user'];
 
-		return $this->boardConfig['createdBy'][$user] ?? '';
+		return $this->config['users'][$user] ?? '';
 	}
 
 	private function getProperties(): array

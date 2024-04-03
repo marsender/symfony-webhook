@@ -1,0 +1,47 @@
+users:
+  marsender: ynrzgwid4bb3jgn377jqsoy8oc
+  QDZantoine: t4wjf6qs47gb3qcpceysxaq6de
+
+# Repos names are eithen
+# - a name to be reused for the config of another repo
+# - the exact full name of the github repo that will send the webhook events
+repos:
+  projects:
+    boardId: bnun4wowr4inf8ebeh4mrcyx6cc
+    properties:
+      dateKey: adhstgkj3usbw5ne6kaziwrdhbh
+      statusKey: adj7gm9wxsy1w61hfksxzkce75h
+      statusValue: a59obmejixs19cefych19kyxmaw
+      urlKey: a45oaj4wx8k6j5h9wbc769neqga
+      assignedKey: asyzr433wkogfectua9rnh894zr
+
+  Alveos/easylibrary_back:
+    boardId: b8crmfdz4jtgt3rzeogww9tzqxc
+    properties:
+      dateKey: a9ieh4p9kmq17fynqyspioi5b5w
+      statusKey: ajexcf358qpw6bwhtpsapucbk3e
+      statusValue: a6fd8iyp33t9ckgbrorwbep4j6e
+      urlKey: ac95t57ir869uacidk3w3dwf8qh
+      assignedKey: auzf4n7979j895njp7qw7i3hpto
+
+  QDZantoine/spot-to-work:
+    boardId: bttz8yzp5htbgdgwbm3a8aszf7a
+    properties:
+      dateKey: a5m9ngza95egtm64nww3w9agjja
+      statusKey: ap4cno3hufwtzrwjyt6jusihrzy
+      statusValue: ayfyddrgs7bq5zsjn6d146ox78c
+      urlKey: a51xn7pcmdyp7zepzuxfbqgaxur
+      assignedKey: ay6zw4ohtou871oeb9364kfsm4w
+
+  marsender/ratio-force:
+    boardId: b3t3dne4jgff4mriw9igyafyuur
+    properties:
+      dateKey: aiz9t6wz5bfzf7n5q99big9344c
+      statusKey: auixkgzpweq77d7x9b98cw6gw3e
+      statusValue: a3sa3y94o1y3onhwotuzqxcxhdc
+      urlKey: a5ry3q77jraod5dk9od4sdk318c
+      assignedKey: aukh6okxkwqibjo1ychphp4yx1a
+
+  marsender/symfony-webhook: projects
+
+  marsender/symfony-assetmapper: projects
