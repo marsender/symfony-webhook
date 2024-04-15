@@ -268,6 +268,31 @@ class MattermostBoardService
 		return $this->config['users'][$user] ?? '';
 	}
 
+	/**
+	 * Get the array of assignees.
+	 *
+	 * @return string[]
+	 */
+	private function getAssignees(): array
+	{
+		$assignees = $this->issue['assignees'];
+
+		$res = [];
+		foreach ($assignees as $assignee) {
+			$login = $assignee['login'] ?? '';
+			if ('' === $login) {
+				continue;
+			}
+			$user = $this->config['users'][$login] ?? '';
+			if ('' === $user) {
+				continue;
+			}
+			$res[] = $user;
+		}
+
+		return $res;
+	}
+
 	private function getProperties(): array
 	{
 		$res = [];
@@ -282,8 +307,16 @@ class MattermostBoardService
 			$properties['statusKey'] => $properties['statusValue'],
 			$properties['dateKey'] => json_encode(['from' => $dateTimestamp]),
 			$properties['urlKey'] => $issueUrl,
-			$properties['assignedKey'] => [$this->getCreatedBy()],
 		];
+
+		// Set assignees or by default the creator
+		$key = $properties['assignedKey'];
+		$assignees = $this->getAssignees();
+		if (empty($assignees)) {
+			$res[$key] = [$this->getCreatedBy()];
+		} else {
+			$res[$key] = $assignees;
+		}
 
 		return $res;
 	}

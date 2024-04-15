@@ -52,6 +52,12 @@ class GithubConsumer implements ConsumerInterface
 		}
 		$data['url'] = $url;
 
+		$assignees = $issue['assignees'] ?? null;
+		if (null === $assignees) {
+			throw new \LogicException('Github issue assignees are not set');
+		}
+		$data['assignees'] = $assignees;
+
 		$this->mattermostBoardService->consume($data);
 	}
 }
