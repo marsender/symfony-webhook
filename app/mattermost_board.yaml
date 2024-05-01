@@ -2,7 +2,7 @@ users:
   marsender: ynrzgwid4bb3jgn377jqsoy8oc
   QDZantoine: t4wjf6qs47gb3qcpceysxaq6de
 
-# Repos names are eithen
+# Repos names are either
 # - a name to be reused for the config of another repo
 # - the exact full name of the github repo that will send the webhook events
 repos:
@@ -45,3 +45,5 @@ repos:
   marsender/symfony-webhook: projects
 
   marsender/symfony-assetmapper: projects
+
+  default: projects

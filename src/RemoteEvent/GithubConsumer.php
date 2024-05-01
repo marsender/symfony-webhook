@@ -10,8 +10,6 @@ use Symfony\Component\RemoteEvent\RemoteEvent;
 #[AsRemoteEventConsumer(name: 'github')]
 class GithubConsumer implements ConsumerInterface
 {
-	private string $id;
-	private string $name;
 	private array $payload;
 
 	public function __construct(

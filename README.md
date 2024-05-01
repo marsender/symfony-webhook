@@ -47,6 +47,15 @@ or use the command
 composer deploy
 ```
 
+# Config
+
+Setup mattermost config in the env file
+```bash
+nano .env.local
+# Set authentication: either the permanent auth token or the mattermost login user and password
+# Set board api v2 url and yaml config file
+```
+
 # Delopper instructions
 
 ## Debugging: Seeing All Mapped Assets

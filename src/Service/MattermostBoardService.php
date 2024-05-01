@@ -17,8 +17,8 @@ class MattermostBoardService
 {
 	private const authTokenPattern = 'MMAUTHTOKEN=';
 
-	private array $config;
-	private array $boardConfig;
+	private array $config = [];
+	private array $boardConfig = [];
 
 	private array $issue;
 
@@ -238,10 +238,16 @@ class MattermostBoardService
 	{
 		$repository = $this->issue['repository'];
 
+		// Board config is an array or the name of a board config array
 		$boardConfig = $this->config['repos'][$repository] ?? null;
+		// If not set, try to get the default board config
+		if (null === $boardConfig) {
+			$boardConfig = $this->config['repos']['default'] ?? null;
+		}
 		if (is_string($boardConfig)) {
 			$boardConfig = $this->config['repos'][$boardConfig] ?? null;
 		}
+		// If not set and no default then abort
 		if (null === $boardConfig) {
 			return false;
 		}
