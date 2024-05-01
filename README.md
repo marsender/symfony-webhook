@@ -56,6 +56,13 @@ nano .env.local
 # Set board api v2 url and yaml config file
 ```
 
+Setup Github to send the webhooks to your application url
+- Go to Settings | Webhooks | Settings tab
+	- Set the Payload URL with your app url, eg: https://webhook.host/webhook/github
+	- Set the Content type to: application/json
+	- Set "Which events would you like to trigger this webhook?" to "Let me select individual events."
+		- Select at least the "Issues" checkbox
+
 # Delopper instructions
 
 ## Debugging: Seeing All Mapped Assets
