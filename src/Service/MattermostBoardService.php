@@ -245,6 +245,13 @@ class MattermostBoardService
 			$boardConfig = $this->config['repos']['default'] ?? null;
 		}
 		if (is_string($boardConfig)) {
+			// Add repo name prefix to the issue title
+			$parts = explode('/', $repository);
+			if (count($parts) > 1) {
+				array_shift($parts);
+			}
+			$prefix = implode('/', $parts);
+			$this->issue['title'] = sprintf('%s - %s', $prefix, $this->issue['title']);
 			$boardConfig = $this->config['repos'][$boardConfig] ?? null;
 		}
 		// If not set and no default then abort
