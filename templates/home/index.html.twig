@@ -2,6 +2,11 @@
 
 {% block body %}
 	<div>
-		<h1>Hello here!</h1>
+		<h1>Webhooks</h1>
+		<ul>
+			{% for item in items %}
+				<li><a href="{{ item }}">{{ item }}</a></li>
+			{% endfor %}
+		</ul>
 	</div>
 {% endblock %}
