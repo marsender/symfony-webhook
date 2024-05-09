@@ -102,8 +102,11 @@
 		"fixtures": [
 			"bin/console doctrine:fixtures:load --env=test --purger=fixtures_purger -n"
 		],
-		"cs-fixer": [
+		"php-cs-fixer": [
 			"vendor/bin/php-cs-fixer fix --allow-risky=yes --using-cache=no --config .php-cs-fixer.php src tests"
+		],
+		"twig-cs-fixer": [
+			"vendor/bin/twig-cs-fixer lint --fix templates"
 		],
 		"rector": [
 			"vendor/bin/rector process"
@@ -130,6 +133,7 @@
 		"symfony/maker-bundle": "^1.0",
 		"symfony/phpunit-bridge": "^7.0",
 		"symfony/stopwatch": "7.0.*",
-		"symfony/web-profiler-bundle": "7.0.*"
+		"symfony/web-profiler-bundle": "7.0.*",
+		"vincentlanglet/twig-cs-fixer": "^2.9"
 	}
 }
