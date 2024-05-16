@@ -52,7 +52,9 @@ repos:
       assignedKey: aukh6okxkwqibjo1ychphp4yx1a
 
   marsender/symfony-webhook: projects
-
   marsender/symfony-assetmapper: projects
+
+  QDZantoine/api-chat: QDZantoine/spot-to-work
+  QDZantoine/front-chat: QDZantoine/spot-to-work
 
   default: projects
