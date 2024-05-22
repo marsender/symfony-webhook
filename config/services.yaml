@@ -12,6 +12,8 @@ services:
     autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
     bind: # defines the scalar arguments once and apply them to any service defined/created in this file
       #$adminEmail: '%env(ADMIN_EMAIL)%'
+      #$cacheDir: '%kernel.cache_dir%'
+      #$logDir: '%kernel.logs_dir%'
       $projectDir: '%kernel.project_dir%'
       $mattermostApiUrl: '%env(MATTERMOST_API_URL)%'
       $mattermostAuthToken: '%env(MATTERMOST_AUTH_TOKEN)%'

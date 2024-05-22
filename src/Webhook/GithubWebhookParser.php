@@ -2,6 +2,7 @@
 
 namespace App\Webhook;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\ChainRequestMatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcher\HostRequestMatcher;
@@ -14,6 +15,11 @@ use Symfony\Component\Webhook\Exception\RejectWebhookException;
 
 final class GithubWebhookParser extends AbstractRequestParser
 {
+	public function __construct(
+		private readonly LoggerInterface $logger
+	) {
+	}
+
 	/**
 	 * Request matcher that will catch /webhook/github path.
 	 */
@@ -36,6 +42,8 @@ final class GithubWebhookParser extends AbstractRequestParser
 	protected function doParse(Request $request, string $secret): ?RemoteEvent
 	{
 		$data = $request->getContent();
+		$this->logger->debug($data);
+
 		$eventData = is_string($data) ? json_decode($data, true, 512, JSON_THROW_ON_ERROR) : $request->toArray();
 
 		$sender = $eventData['sender']['login'] ?? null;
