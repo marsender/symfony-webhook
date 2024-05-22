@@ -6,8 +6,17 @@ users:
 # - a name to be reused for the config of another repo
 # - the exact full name of the github repo that will send the webhook events
 repos:
-  projects:
+  Opale/projects:
     boardId: bnun4wowr4inf8ebeh4mrcyx6cc
+    properties:
+      dateKey: adhstgkj3usbw5ne6kaziwrdhbh
+      statusKey: adj7gm9wxsy1w61hfksxzkce75h
+      statusValue: a59obmejixs19cefych19kyxmaw
+      urlKey: a45oaj4wx8k6j5h9wbc769neqga
+      assignedKey: asyzr433wkogfectua9rnh894zr
+
+  Garnier/projects:
+    boardId: bmhfssuowrpr8df8d5fkux8dfqa
     properties:
       dateKey: adhstgkj3usbw5ne6kaziwrdhbh
       statusKey: adj7gm9wxsy1w61hfksxzkce75h
@@ -51,10 +60,29 @@ repos:
       urlKey: a5ry3q77jraod5dk9od4sdk318c
       assignedKey: aukh6okxkwqibjo1ychphp4yx1a
 
-  marsender/symfony-webhook: projects
-  marsender/symfony-assetmapper: projects
+  marsender/symfony-webhook: Opale/projects
+  marsender/symfony-assetmapper: Opale/projects
 
   QDZantoine/api-chat: QDZantoine/spot-to-work
   QDZantoine/front-chat: QDZantoine/spot-to-work
 
-  default: projects
+  classiques-garnier/ansible_infra: Garnier/projects
+  classiques-garnier/ansible_roles: Garnier/projects
+  classiques-garnier/garnier_admin: Garnier/projects
+  classiques-garnier/garnier_api: Garnier/projects
+  classiques-garnier/garnier_atoll: Garnier/projects
+  classiques-garnier/garnier_bases: Garnier/projects
+  classiques-garnier/garnier_blf: Garnier/projects
+  classiques-garnier/garnier_cpp: Garnier/projects
+  classiques-garnier/garnier_dev: Garnier/projects
+  classiques-garnier/garnier_docker: Garnier/projects
+  classiques-garnier/garnier_prod: Garnier/projects
+  classiques-garnier/garnier_public: Garnier/projects
+  classiques-garnier/garnier_stats: Garnier/projects
+  classiques-garnier/garnier_thelia: Garnier/projects
+  classiques-garnier/php_atk: Garnier/projects
+  classiques-garnier/php_lib: Garnier/projects
+  classiques-garnier/php_mojavi: Garnier/projects
+  classiques-garnier/php_test: Garnier/projects
+
+  default: Opale/projects

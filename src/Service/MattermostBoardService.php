@@ -131,7 +131,7 @@ class MattermostBoardService
 			if (is_array($cookies)) {
 				foreach ($cookies as $cookie) {
 					// Extract the token from the header
-					if (0 === strpos($cookie, self::authTokenPattern)) {
+					if (str_starts_with($cookie, self::authTokenPattern)) {
 						$length = strlen(self::authTokenPattern);
 						$authToken = substr($cookie, $length, strpos($cookie, ';') - $length);
 						break;
@@ -188,7 +188,7 @@ class MattermostBoardService
 		}
 
 		$boardId = $this->getBoardId();
-		if (empty($boardId)) {
+		if ('' === $boardId || '0' === $boardId) {
 			return false;
 		}
 		$url = sprintf('%s/boards/%s/cards', $this->mattermostBoardApiUrl, $boardId);
@@ -227,11 +227,8 @@ class MattermostBoardService
 		}
 
 		$cardId = $data['id'] ?? null;
-		if (null === $cardId) {
-			return false;
-		}
 
-		return true;
+		return null !== $cardId;
 	}
 
 	private function setBoardConfig(): bool
@@ -246,7 +243,7 @@ class MattermostBoardService
 		}
 		if (is_string($boardConfig)) {
 			// Add repo name prefix to the issue title
-			$parts = explode('/', $repository);
+			$parts = explode('/', (string) $repository);
 			if (count($parts) > 1) {
 				array_shift($parts);
 			}
@@ -325,11 +322,7 @@ class MattermostBoardService
 		// Set assignees or by default the creator
 		$key = $properties['assignedKey'];
 		$assignees = $this->getAssignees();
-		if (empty($assignees)) {
-			$res[$key] = [$this->getCreatedBy()];
-		} else {
-			$res[$key] = $assignees;
-		}
+		$res[$key] = [] === $assignees ? [$this->getCreatedBy()] : $assignees;
 
 		return $res;
 	}
