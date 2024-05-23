@@ -44,6 +44,7 @@ class MattermostBoardService
 		$action = $this->issue['action'] ?? null;
 
 		switch ($action) {
+			case 'open':
 			case 'opened':
 				$res = $this->createCard();
 				break;
@@ -290,6 +291,10 @@ class MattermostBoardService
 		$res = [];
 		foreach ($assignees as $assignee) {
 			$login = $assignee['login'] ?? '';
+			$username = $assignee['username'] ?? '';
+			if ('' !== $username) {
+				$login = $username;
+			}
 			if ('' === $login) {
 				continue;
 			}
@@ -322,7 +327,10 @@ class MattermostBoardService
 		// Set assignees or by default the creator
 		$key = $properties['assignedKey'];
 		$assignees = $this->getAssignees();
-		$res[$key] = [] === $assignees ? [$this->getCreatedBy()] : $assignees;
+		if ([] === $assignees) {
+			$assignees = [$this->getCreatedBy()];
+		}
+		$res[$key] = $assignees;
 
 		return $res;
 	}

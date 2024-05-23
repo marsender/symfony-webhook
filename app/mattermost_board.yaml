@@ -24,6 +24,15 @@ repos:
       urlKey: a45oaj4wx8k6j5h9wbc769neqga
       assignedKey: asyzr433wkogfectua9rnh894zr
 
+  WorkingShare/projects:
+    boardId: b39eagpai97gq3ngdg6z9hpsipo
+    properties:
+      dateKey: adhstgkj3usbw5ne6kaziwrdhbh
+      statusKey: adj7gm9wxsy1w61hfksxzkce75h
+      statusValue: a59obmejixs19cefych19kyxmaw
+      urlKey: a45oaj4wx8k6j5h9wbc769neqga
+      assignedKey: asyzr433wkogfectua9rnh894zr
+
   Alveos/easylibrary_back:
     boardId: b8crmfdz4jtgt3rzeogww9tzqxc
     properties:
@@ -84,5 +93,7 @@ repos:
   classiques-garnier/php_lib: Garnier/projects
   classiques-garnier/php_mojavi: Garnier/projects
   classiques-garnier/php_test: Garnier/projects
+
+  ws-website: WorkingShare/projects
 
   default: Opale/projects
