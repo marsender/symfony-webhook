@@ -13,6 +13,7 @@ class HomeController extends AbstractController
 	{
 		$items = [];
 		$items[] = '/webhook/github';
+		$items[] = '/webhook/gitlab';
 
 		return $this->render('home/index.html.twig', [
 			'items' => $items,
