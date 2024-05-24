@@ -24,6 +24,15 @@ repos:
       urlKey: a45oaj4wx8k6j5h9wbc769neqga
       assignedKey: asyzr433wkogfectua9rnh894zr
 
+  Facility/projects:
+    boardId: bzphph86g93dt7gebewicbhgnny
+    properties:
+      dateKey: adhstgkj3usbw5ne6kaziwrdhbh
+      statusKey: adj7gm9wxsy1w61hfksxzkce75h
+      statusValue: a59obmejixs19cefych19kyxmaw
+      urlKey: a45oaj4wx8k6j5h9wbc769neqga
+      assignedKey: asyzr433wkogfectua9rnh894zr
+
   WorkingShare/projects:
     boardId: b39eagpai97gq3ngdg6z9hpsipo
     properties:
@@ -50,15 +59,6 @@ repos:
       statusValue: ayfyddrgs7bq5zsjn6d146ox78c
       urlKey: a51xn7pcmdyp7zepzuxfbqgaxur
       assignedKey: ay6zw4ohtou871oeb9364kfsm4w
-
-  marsender/facility-project:
-    boardId: bzphph86g93dt7gebewicbhgnny
-    properties:
-      dateKey: adhstgkj3usbw5ne6kaziwrdhbh
-      statusKey: adj7gm9wxsy1w61hfksxzkce75h
-      statusValue: a59obmejixs19cefych19kyxmaw
-      urlKey: a45oaj4wx8k6j5h9wbc769neqga
-      assignedKey: asyzr433wkogfectua9rnh894zr
 
   marsender/ratio-force:
     boardId: b3t3dne4jgff4mriw9igyafyuur
@@ -94,6 +94,10 @@ repos:
   classiques-garnier/php_mojavi: Garnier/projects
   classiques-garnier/php_test: Garnier/projects
 
-  ws-website: WorkingShare/projects
+  marsender/facility-project: Facility/projects
+  facility-project/frontend: Facility/projects
+  facility-project/backend: Facility/projects
+
+  workingshare/ws-website: WorkingShare/projects
 
   default: Opale/projects

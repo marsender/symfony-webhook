@@ -51,7 +51,7 @@ final class GitlabWebhookParser extends AbstractRequestParser
 			throw new RejectWebhookException(406, 'Webhook has no user username');
 		}
 
-		$repositoryName = $eventData['repository']['name'] ?? null;
+		$repositoryName = $eventData['project']['path_with_namespace'] ?? null;
 		if (null === $repositoryName) {
 			throw new RejectWebhookException(406, 'Webhook has no repository name');
 		}
