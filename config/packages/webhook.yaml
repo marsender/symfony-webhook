@@ -4,5 +4,7 @@ framework:
       # The webhook routing name must be unique and is part of the URL, eg: /webhook/github
       github:
         service: App\Webhook\GithubWebhookParser
+        secret: '%env(GITHUB_WEBHOOK_SECRET)%'
       gitlab:
         service: App\Webhook\GitlabWebhookParser
+        secret: '%env(GITLAB_WEBHOOK_SECRET)%'

@@ -5,10 +5,11 @@ namespace App\Webhook;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\ChainRequestMatcher;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestMatcher\HostRequestMatcher;
+// use Symfony\Component\HttpFoundation\RequestMatcher\HostRequestMatcher;
 use Symfony\Component\HttpFoundation\RequestMatcher\IsJsonRequestMatcher;
 use Symfony\Component\HttpFoundation\RequestMatcher\MethodRequestMatcher;
 use Symfony\Component\HttpFoundation\RequestMatcherInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\RemoteEvent\RemoteEvent;
 use Symfony\Component\Webhook\Client\AbstractRequestParser;
 use Symfony\Component\Webhook\Exception\RejectWebhookException;
@@ -25,7 +26,7 @@ final class GitlabWebhookParser extends AbstractRequestParser
 	 */
 	protected function getRequestMatcher(): RequestMatcherInterface
 	{
-		// these define the conditions that the incoming webhook request
+		// Check the conditions that the incoming webhook request
 		// must match in order to be handled by this parser
 		return new ChainRequestMatcher([
 			// new HostRequestMatcher('github.com'),
@@ -39,23 +40,38 @@ final class GitlabWebhookParser extends AbstractRequestParser
 	 *
 	 * @see https://docs.github.com/en/webhooks
 	 */
-	protected function doParse(Request $request, string $secret): ?RemoteEvent
+	protected function doParse(Request $request, #[\SensitiveParameter] string $secret): ?RemoteEvent
 	{
-		$data = $request->getContent();
-		$this->logger->debug($data);
+		// Validate the request against $secret
+		if ('' !== $secret) {
+			$signature = $request->headers->get('X-Hub-Signature-256');
+			$secretSignature = 'sha256='.hash_hmac('sha256', $request->getContent(), $secret);
+			if (!is_string($signature) || !str_starts_with($signature, 'sha256=')	|| !hash_equals($secretSignature, $signature)) {
+				throw new RejectWebhookException(Response::HTTP_UNAUTHORIZED, 'Invalid authentication token');
+			}
+		}
 
-		$eventData = is_string($data) ? json_decode($data, true, 512, JSON_THROW_ON_ERROR) : $request->toArray();
+		$payload = $request->getPayload();
+		// $this->logger->debug($payload);
 
-		$sender = $eventData['user']['username'] ?? null;
+		// Validate the request payload
+		if (!$payload->has('user') || !$payload->has('project')) {
+			throw new RejectWebhookException(Response::HTTP_BAD_REQUEST, 'Request payload does not contain required fields');
+		}
+
+		// Parse the request payload and return a RemoteEvent object
+		$payload = $payload->all();
+
+		$sender = $payload['user']['username'] ?? null;
 		if (null === $sender) {
-			throw new RejectWebhookException(406, 'Webhook has no user username');
+			throw new RejectWebhookException(Response::HTTP_NOT_ACCEPTABLE, 'Webhook has no user username');
 		}
 
-		$repositoryName = $eventData['project']['path_with_namespace'] ?? null;
+		$repositoryName = $payload['project']['path_with_namespace'] ?? null;
 		if (null === $repositoryName) {
-			throw new RejectWebhookException(406, 'Webhook has no repository name');
+			throw new RejectWebhookException(Response::HTTP_NOT_ACCEPTABLE, 'Webhook has no repository name');
 		}
 
-		return new RemoteEvent($repositoryName, $sender, $eventData);
+		return new RemoteEvent($repositoryName, $sender, $payload);
 	}
 }
