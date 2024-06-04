@@ -15,7 +15,7 @@ class GitlabWebhookTest extends WebTestCase
 		$this->kernelBrowser = self::createClient();
 	}
 
-	public function testWebhook(): void
+	public function testGitlabWebhook(): void
 	{
 		$this->initServices();
 

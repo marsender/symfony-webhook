@@ -199,6 +199,12 @@ class MattermostBoardService
 		$card['createdBy'] = $this->getCreatedBy();
 		$card['properties'] = $this->getProperties();
 
+		// Skip api call for tests
+		$appEnv = $_ENV['APP_ENV'];
+		if ('test' === $appEnv) {
+			return true;
+		}
+
 		try {
 			$response = $this->client->request('POST', $url, [
 				'headers' => [
