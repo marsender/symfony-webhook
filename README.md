@@ -86,6 +86,12 @@ bin/console importmap:update # add packagename to update only one package
 bin/console importmap:require es-module-shims
 ```
 
+## Create webhook files and select request matchers
+
+```bash
+bin/console make:webhook
+```
+
 ## Symfony Docker
 
 If not already done, [install Docker Compose](https://docs.docker.com/compose/install/) (v2.10+)
@@ -137,10 +143,3 @@ docker compose exec php composer require `package-name`
 ```
 
 Browse `https//localhost:4443`
-
-# Delopper instructions
-
-Create webhook files and select request matchers
-```bash
-bin/console make:webhook
-```
