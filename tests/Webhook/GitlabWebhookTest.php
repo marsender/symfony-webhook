@@ -1,44 +1,22 @@
 <?php
 
-namespace tests\Controller;
+namespace App\Tests\Webhook;
 
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\Response;
-
-class GitlabWebhookTest extends WebTestCase
+class GitlabWebhookTest extends AbstractWebhookTestCase
 {
-	private KernelBrowser $kernelBrowser;
-
-	private function initServices(): void
+	protected function getProvider(): string
 	{
-		$this->kernelBrowser = self::createClient();
+		return 'gitlab';
+	}
+
+	protected function getPayloads(): array
+	{
+		return [$this->getIssueOpenGitlabPayloadString()];
 	}
 
 	public function testGitlabWebhook(): void
 	{
-		$this->initServices();
-
-		$i = 0;
-		while (true) {
-			$payload = match (++$i) {
-				1 => $this->getIssueOpenGitlabPayloadString(),
-				default => null,
-			};
-			if (null === $payload) {
-				break;
-			}
-			$uri = '/webhook/gitlab';
-			$this->assertPayload($payload, $uri);
-		}
-	}
-
-	private function assertPayload(array $payload, string $uri): void
-	{
-		$this->kernelBrowser->request('POST', $uri, [], [], [], json_encode($payload));
-
-		$statusCode = $this->kernelBrowser->getResponse()->getStatusCode();
-		$this->assertEquals(Response::HTTP_ACCEPTED, $statusCode);
+		$this->testPayloads();
 	}
 
 	private function getIssueOpenGitlabPayloadString(): array

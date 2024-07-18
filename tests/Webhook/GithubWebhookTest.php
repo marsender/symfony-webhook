@@ -1,49 +1,22 @@
 <?php
 
-namespace tests\Controller;
+namespace App\Tests\Webhook;
 
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\Response;
-
-class GithubWebhookTest extends WebTestCase
+class GithubWebhookTest extends AbstractWebhookTestCase
 {
-	private KernelBrowser $kernelBrowser;
-
-	private function initServices(): void
+	protected function getProvider(): string
 	{
-		$this->kernelBrowser = self::createClient();
+		return 'github';
 	}
 
-	public function testGithubWebhook(): void
+	protected function getPayloads(): array
 	{
-		$this->initServices();
-
-		$i = 0;
-		while (true) {
-			$payload = match (++$i) {
-				1 => $this->getPingPayload(),
-				2 => $this->getIssueAssignedPayload(),
-				3 => $this->getIssueOpenGiteaPayloadString(),
-				4 => $this->getIssueOpenPayloadString(),
-				5 => $this->getIssueOpenPayloadRepo(),
-				6 => $this->getIssueClosedPayload(),
-				default => null,
-			};
-			if (null === $payload) {
-				break;
-			}
-			$uri = '/webhook/github';
-			$this->assertPayload($payload, $uri);
-		}
+		return [$this->getPingPayload(), $this->getIssueAssignedPayload(), $this->getIssueOpenGiteaPayloadString(), $this->getIssueOpenPayloadString(), $this->getIssueOpenPayloadRepo(), $this->getIssueClosedPayload()];
 	}
 
-	private function assertPayload(array $payload, string $uri): void
+	public function testGitlabWebhook(): void
 	{
-		$this->kernelBrowser->request('POST', $uri, [], [], [], json_encode($payload));
-
-		$statusCode = $this->kernelBrowser->getResponse()->getStatusCode();
-		$this->assertEquals(Response::HTTP_ACCEPTED, $statusCode);
+		$this->testPayloads();
 	}
 
 	private function getIssueAssignedPayload(): array
