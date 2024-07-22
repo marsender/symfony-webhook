@@ -108,7 +108,7 @@ class BoardController extends AbstractController
 		$header = [];
 		$lineSep = '## =============================================================================';
 		$header[] = $lineSep;
-		$parts = explode('/', $repository);
+		$parts = explode('/', (string) $repository);
 		$repoName = $parts[0];
 		$title = empty($title) ? $repoName : $title;
 		$line = sprintf('## %s %s %s', $title, $this->translator->trans('board.export.activity'), $period);
@@ -140,7 +140,7 @@ class BoardController extends AbstractController
 			// Add item line
 			$durationInfo = isset($duration) ? number_format($duration, 1, ',') : '';
 			$durationInfo = str_replace(',0', '', $durationInfo);
-			$line = sprintf('%-5s%s', $durationInfo, trim($item['title']));
+			$line = sprintf('%-5s%s', $durationInfo, trim((string) $item['title']));
 			$content[$timestamp] = $line;
 		}
 		ksort($content);
@@ -157,7 +157,7 @@ class BoardController extends AbstractController
 
 	private function saveContent(array $data, string $content): bool
 	{
-		if (empty($this->boardExportPath)) {
+		if ('' === $this->boardExportPath) {
 			return false;
 		}
 
@@ -165,7 +165,7 @@ class BoardController extends AbstractController
 
 		// Init path
 		$repository = $data['repository'];
-		$parts = explode('/', $repository);
+		$parts = explode('/', (string) $repository);
 		$repoName = $parts[0];
 		$path = sprintf('%s/%s/cra', $this->boardExportPath, $repoName);
 		if (!$filesystem->exists($path)) {

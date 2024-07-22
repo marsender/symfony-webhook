@@ -129,7 +129,7 @@ class MattermostBoardService
 			if (!isset($dateInfo)) {
 				continue;
 			}
-			$jsonDateInfo = json_decode($dateInfo, true);
+			$jsonDateInfo = json_decode((string) $dateInfo, true);
 			$timestamp = $jsonDateInfo['from'];
 			$dateFrom = new \DateTime('@'.($timestamp / 1000));
 			if ($dateFrom < $dateMin || $dateFrom > $dateMax) {

@@ -12,9 +12,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ExportBoardType extends AbstractType
 {
-	public function buildForm(FormBuilderInterface $builder, array $options): void
+	public function buildForm(FormBuilderInterface $formBuilder, array $options): void
 	{
-		$builder
+		$formBuilder
 			->add('title', TextType::class, ['label' => 'board.export.title', 'required' => false])
 			->add('repository', ChoiceType::class, ['label' => 'board.export.repository', 'choices' => $options['repository'], 'choice_translation_domain' => false])
 			->add('dateMin', DateType::class, ['label' => 'board.export.dateMin', 'data' => new \DateTime('first day of this month'), 'required' => false])
