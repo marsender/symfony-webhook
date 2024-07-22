@@ -1,20 +1,18 @@
 {% extends 'base.html.twig' %}
 
-{% block body_id 'test-board' %}
+{% block body_id 'board' %}
 
 {% block title %}
-	Test board
+	Board
 {% endblock %}
 
 {% block body %}
 	<div class="container">
 		<div class="page-header">
-			<h1>Test board</h1>
+			<h1>Board</h1>
 		</div>
 		<div class="page-content mt-2">
-			<button class="mb-2 button is-small">
-				Unused for now
-			</button>
+			{{ form(form) }}
 		</div>
 	</div>
 {% endblock %}

@@ -1,5 +1,16 @@
 app:
   title: Symfony webhook
 
+board:
+  title: Boards
+  export:
+    title: Title
+    repository: Repository
+    dateMin: Date min
+    dateMax: Date max
+    export: Export
+    activity: activity
+    week: Week
+
 test:
   title: Tests

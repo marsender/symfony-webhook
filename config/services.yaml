@@ -15,6 +15,7 @@ services:
       #$cacheDir: '%kernel.cache_dir%'
       #$logDir: '%kernel.logs_dir%'
       $projectDir: '%kernel.project_dir%'
+      $boardExportPath: '%env(BOARD_EXPORT_PATH)%'
       $mattermostApiUrl: '%env(MATTERMOST_API_URL)%'
       $mattermostAuthToken: '%env(MATTERMOST_AUTH_TOKEN)%'
       $mattermostLoginUser: '%env(MATTERMOST_LOGIN_USER)%'

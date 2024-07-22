@@ -5,7 +5,7 @@ users:
 
 # Repos names are either
 # - a name to be reused for the config of another repo
-# - the exact full name of the github repo that will send the webhook events
+# - the exact full name of the repo that will send by the webhook events
 repos:
   Opale/projects:
     boardId: bnun4wowr4inf8ebeh4mrcyx6cc
@@ -15,6 +15,7 @@ repos:
       statusValue: a59obmejixs19cefych19kyxmaw
       urlKey: a45oaj4wx8k6j5h9wbc769neqga
       assignedKey: asyzr433wkogfectua9rnh894zr
+      durationKey: aqrhi4z86f7do8pkfa8gu686u3h
 
   Garnier/projects:
     boardId: bmhfssuowrpr8df8d5fkux8dfqa
@@ -24,6 +25,8 @@ repos:
       statusValue: a59obmejixs19cefych19kyxmaw
       urlKey: a45oaj4wx8k6j5h9wbc769neqga
       assignedKey: asyzr433wkogfectua9rnh894zr
+      durationKey: arc69efic3oa9rfjyoa6nzrupso
+      taskKey: asmjd6bgxrr9rxf8jso73azp4te
 
   Facility/projects:
     boardId: bzphph86g93dt7gebewicbhgnny
@@ -33,6 +36,8 @@ repos:
       statusValue: a59obmejixs19cefych19kyxmaw
       urlKey: a45oaj4wx8k6j5h9wbc769neqga
       assignedKey: asyzr433wkogfectua9rnh894zr
+      durationKey: a47px9zi6ug3hrfajne7ekezkeo
+      taskKey: a4euiir4xgn6o8hqupg5s1qacnc
 
   WorkingShare/projects:
     boardId: b39eagpai97gq3ngdg6z9hpsipo
@@ -42,6 +47,7 @@ repos:
       statusValue: a59obmejixs19cefych19kyxmaw
       urlKey: a45oaj4wx8k6j5h9wbc769neqga
       assignedKey: asyzr433wkogfectua9rnh894zr
+      durationKey: a4kcdm9scc98fkrh4rx4qrm5bqh
 
   Alveos/easylibrary_back:
     boardId: b8crmfdz4jtgt3rzeogww9tzqxc
@@ -51,6 +57,7 @@ repos:
       statusValue: a6fd8iyp33t9ckgbrorwbep4j6e
       urlKey: ac95t57ir869uacidk3w3dwf8qh
       assignedKey: auzf4n7979j895njp7qw7i3hpto
+      durationKey: a7ux11eztzqqgnamzqd9z588uxo
 
   QDZantoine/spot-to-work:
     boardId: bttz8yzp5htbgdgwbm3a8aszf7a
@@ -60,6 +67,7 @@ repos:
       statusValue: ayfyddrgs7bq5zsjn6d146ox78c
       urlKey: a51xn7pcmdyp7zepzuxfbqgaxur
       assignedKey: ay6zw4ohtou871oeb9364kfsm4w
+      durationKey: as76ecdyojgbra1sye1khhsn5ke
 
   marsender/ratio-force:
     boardId: b3t3dne4jgff4mriw9igyafyuur
@@ -69,6 +77,7 @@ repos:
       statusValue: a3sa3y94o1y3onhwotuzqxcxhdc
       urlKey: a5ry3q77jraod5dk9od4sdk318c
       assignedKey: aukh6okxkwqibjo1ychphp4yx1a
+      durationKey: afr1e6qbpduhnk8u4sxixb9y5sc
 
   marsender/symfony-webhook: Opale/projects
   marsender/symfony-assetmapper: Opale/projects

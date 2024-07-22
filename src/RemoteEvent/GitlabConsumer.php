@@ -13,7 +13,7 @@ class GitlabConsumer implements ConsumerInterface
 	private array $payload;
 
 	public function __construct(
-		public readonly MattermostBoardService $mattermostBoardService
+		private readonly MattermostBoardService $mattermostBoardService
 	) {
 	}
 
