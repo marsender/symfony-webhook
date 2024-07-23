@@ -4,7 +4,6 @@ app:
 board:
   title: Boards
   export:
-    title: Title
     repository: Repository
     dateMin: Date min
     dateMax: Date max

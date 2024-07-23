@@ -74,91 +74,6 @@ class MattermostBoardService
 		return $res;
 	}
 
-	public function exportRepository(string $repository, ?\DateTime $dateMin, ?\DateTime $dateMax): ?array
-	{
-		if (!$this->loadConfig()) {
-			return null;
-		}
-
-		$authToken = $this->getAuthenticationToken();
-		if (null === $authToken) {
-			return null;
-		}
-
-		if (!$this->setBoardConfig($repository)) {
-			return null;
-		}
-
-		$boardId = $this->getBoardId();
-		if ('' === $boardId || '0' === $boardId) {
-			return null;
-		}
-		$url = sprintf('%s/boards/%s/cards?page=0&per_page=0', $this->mattermostBoardApiUrl, $boardId);
-
-		try {
-			$response = $this->client->request('GET', $url, [
-				'headers' => [
-					'Authorization' => sprintf('Bearer %s', $authToken),
-					'X-Requested-With' => 'XMLHttpRequest',
-				],
-			]);
-
-			$statusCode = $response->getStatusCode();
-			if (Response::HTTP_OK !== $statusCode) {
-				$this->logger->error('Mattermost get cards error', [
-					'status_code' => $statusCode,
-				]);
-
-				return null;
-			}
-
-			$data = json_decode($response->getContent(), true);
-		} catch (\Exception $e) {
-			$this->logger->error('Mattermost create card exception', [
-				'message' => $e->getMessage(),
-			]);
-
-			return null;
-		}
-
-		$properties = $this->boardConfig['properties'];
-
-		$cards = [];
-		foreach ($data as $card) {
-			$dateInfo = $card['properties'][$properties['dateKey']] ?? null;
-			if (!isset($dateInfo)) {
-				continue;
-			}
-			$jsonDateInfo = json_decode((string) $dateInfo, true);
-			$timestamp = $jsonDateInfo['from'];
-			$dateFrom = new \DateTime('@'.($timestamp / 1000));
-			if ($dateFrom < $dateMin || $dateFrom > $dateMax) {
-				continue;
-			}
-			$item = [];
-			$item['timestamp'] = $timestamp;
-			$item['date'] = $dateFrom;
-			$item['title'] = $card['title'];
-			if (isset($properties['taskKey'])) {
-				$taskInfo = $card['properties'][$properties['taskKey']] ?? null;
-				if (isset($taskInfo)) {
-					$item['title'] = $taskInfo;
-				}
-			}
-			$durationInfo = $card['properties'][$properties['durationKey']] ?? null;
-			$item['duration'] = isset($durationInfo) ? (float) $durationInfo : null;
-			while (isset($cards[$timestamp])) {
-				$item['timestamp'] = ++$timestamp;
-			}
-			$cards[$timestamp] = $item;
-		}
-
-		// Sort card by date asc
-		ksort($cards);
-
-		return $cards;
-	}
-
 	private function loadConfig(): bool
 	{
 		$filePath = sprintf('%s/%s', $this->projectDir, $this->mattermostBoardConfig);
@@ -174,6 +89,113 @@ class MattermostBoardService
 		}
 
 		return true;
+	}
+
+	/**
+	 * Init the board config from the repository name, eg: marsender/symfony-webhook.
+	 */
+	private function setBoardConfig(string $repository): bool
+	{
+		// Board config is an array or the name of a board config array
+		$boardConfig = $this->config['repos'][$repository] ?? null;
+		// If not set, try to get the default board config
+		if (null === $boardConfig) {
+			$boardConfig = $this->config['repos']['default'] ?? null;
+		}
+		// If board config is a string, get the repo with this key
+		if (is_string($boardConfig)) {
+			$boardConfig = $this->config['repos'][$boardConfig] ?? null;
+			// Add repo name prefix to the issue title, to be more explicit
+			if (isset($this->issue['title'])) {
+				$parts = explode('/', $repository);
+				if (count($parts) > 1) {
+					array_shift($parts);
+				}
+				$prefix = implode('/', $parts);
+				$this->issue['title'] = sprintf('%s - %s', $prefix, $this->issue['title']);
+			}
+		}
+		// If not set and no default then abort
+		if (null === $boardConfig) {
+			return false;
+		}
+
+		$this->boardConfig = $boardConfig;
+
+		return true;
+	}
+
+	/**
+	 * Get the board id of the repository.
+	 *
+	 * The board id is in the board url, eg: https://host/boards/team/teamId/boardId/key
+	 */
+	private function getBoardId(): string
+	{
+		return $this->boardConfig['boardId'] ?? '';
+	}
+
+	private function getCreatedBy(): string
+	{
+		$user = $this->issue['user'];
+
+		return $this->config['users'][$user] ?? '';
+	}
+
+	/**
+	 * Get the array of assignees.
+	 *
+	 * @return string[]
+	 */
+	private function getAssignees(): array
+	{
+		$assignees = $this->issue['assignees'];
+
+		$res = [];
+		foreach ($assignees as $assignee) {
+			$login = $assignee['login'] ?? '';
+			$username = $assignee['username'] ?? '';
+			if ('' !== $username) {
+				$login = $username;
+			}
+			if ('' === $login) {
+				continue;
+			}
+			$user = $this->config['users'][$login] ?? '';
+			if ('' === $user) {
+				continue;
+			}
+			$res[] = $user;
+		}
+
+		return $res;
+	}
+
+	private function getProperties(): array
+	{
+		$res = [];
+
+		$issueUrl = $this->issue['url'];
+		$properties = $this->boardConfig['properties'];
+
+		// Get today timestamp
+		$dateTimestamp = round(microtime(true) * 1000);
+
+		$res = [
+			$properties['statusKey'] => $properties['statusValue'],
+			$properties['dateKey'] => json_encode(['from' => $dateTimestamp]),
+			$properties['urlKey'] => $issueUrl,
+		];
+
+		// Set assignees or by default the creator
+		$key = $properties['assignedKey'];
+		$assignees = $this->getAssignees();
+		if ([] === $assignees) {
+			$assignees = [$this->getCreatedBy()];
+		}
+		$res[$key] = $assignees;
+
+		return $res;
 	}
 
 	/**
@@ -341,110 +363,88 @@ class MattermostBoardService
 		return null !== $cardId;
 	}
 
-	/**
-	 * Init the board config from the repository name, eg: marsender/symfony-webhook.
-	 */
-	private function setBoardConfig(string $repository): bool
+	public function exportRepository(string $repository, ?\DateTime $dateMin, ?\DateTime $dateMax): ?array
 	{
-		// Board config is an array or the name of a board config array
-		$boardConfig = $this->config['repos'][$repository] ?? null;
-		// If not set, try to get the default board config
-		if (null === $boardConfig) {
-			$boardConfig = $this->config['repos']['default'] ?? null;
-		}
-		// If board config is a string, get the repo with this key
-		if (is_string($boardConfig)) {
-			$boardConfig = $this->config['repos'][$boardConfig] ?? null;
-			// Add repo name prefix to the issue title, to be more explicit
-			if (isset($this->issue['title'])) {
-				$parts = explode('/', $repository);
-				if (count($parts) > 1) {
-					array_shift($parts);
-				}
-				$prefix = implode('/', $parts);
-				$this->issue['title'] = sprintf('%s - %s', $prefix, $this->issue['title']);
-			}
-		}
-		// If not set and no default then abort
-		if (null === $boardConfig) {
-			return false;
+		if (!$this->loadConfig()) {
+			return null;
 		}
 
-		$this->boardConfig = $boardConfig;
-
-		return true;
-	}
-
-	/**
-	 * Get the board id of the repository.
-	 *
-	 * The board id is in the board url, eg: https://host/boards/team/teamId/boardId/key
-	 */
-	private function getBoardId(): string
-	{
-		return $this->boardConfig['boardId'] ?? '';
-	}
-
-	private function getCreatedBy(): string
-	{
-		$user = $this->issue['user'];
-
-		return $this->config['users'][$user] ?? '';
-	}
-
-	/**
-	 * Get the array of assignees.
-	 *
-	 * @return string[]
-	 */
-	private function getAssignees(): array
-	{
-		$assignees = $this->issue['assignees'];
-
-		$res = [];
-		foreach ($assignees as $assignee) {
-			$login = $assignee['login'] ?? '';
-			$username = $assignee['username'] ?? '';
-			if ('' !== $username) {
-				$login = $username;
-			}
-			if ('' === $login) {
-				continue;
-			}
-			$user = $this->config['users'][$login] ?? '';
-			if ('' === $user) {
-				continue;
-			}
-			$res[] = $user;
+		$authToken = $this->getAuthenticationToken();
+		if (null === $authToken) {
+			return null;
 		}
 
-		return $res;
-	}
+		if (!$this->setBoardConfig($repository)) {
+			return null;
+		}
 
-	private function getProperties(): array
-	{
-		$res = [];
+		$boardId = $this->getBoardId();
+		if ('' === $boardId || '0' === $boardId) {
+			return null;
+		}
+		$url = sprintf('%s/boards/%s/cards?page=0&per_page=0', $this->mattermostBoardApiUrl, $boardId);
 
-		$issueUrl = $this->issue['url'];
+		try {
+			$response = $this->client->request('GET', $url, [
+				'headers' => [
+					'Authorization' => sprintf('Bearer %s', $authToken),
+					'X-Requested-With' => 'XMLHttpRequest',
+				],
+			]);
+
+			$statusCode = $response->getStatusCode();
+			if (Response::HTTP_OK !== $statusCode) {
+				$this->logger->error('Mattermost get cards error', [
+					'status_code' => $statusCode,
+				]);
+
+				return null;
+			}
+
+			$data = json_decode($response->getContent(), true);
+		} catch (\Exception $e) {
+			$this->logger->error('Mattermost create card exception', [
+				'message' => $e->getMessage(),
+			]);
+
+			return null;
+		}
+
 		$properties = $this->boardConfig['properties'];
 
-		// Get today timestamp
-		$dateTimestamp = round(microtime(true) * 1000);
-
-		$res = [
-			$properties['statusKey'] => $properties['statusValue'],
-			$properties['dateKey'] => json_encode(['from' => $dateTimestamp]),
-			$properties['urlKey'] => $issueUrl,
-		];
-
-		// Set assignees or by default the creator
-		$key = $properties['assignedKey'];
-		$assignees = $this->getAssignees();
-		if ([] === $assignees) {
-			$assignees = [$this->getCreatedBy()];
+		$cards = [];
+		foreach ($data as $card) {
+			$dateInfo = $card['properties'][$properties['dateKey']] ?? null;
+			if (!isset($dateInfo)) {
+				continue;
+			}
+			$jsonDateInfo = json_decode((string) $dateInfo, true);
+			$timestamp = $jsonDateInfo['from'];
+			$dateFrom = new \DateTime('@'.($timestamp / 1000));
+			if ($dateFrom < $dateMin || $dateFrom > $dateMax) {
+				continue;
+			}
+			$item = [];
+			$item['timestamp'] = $timestamp;
+			$item['date'] = $dateFrom;
+			$item['title'] = $card['title'];
+			if (isset($properties['taskKey'])) {
+				$taskInfo = $card['properties'][$properties['taskKey']] ?? null;
+				if (isset($taskInfo)) {
+					$item['title'] = $taskInfo;
+				}
+			}
+			$durationInfo = $card['properties'][$properties['durationKey']] ?? null;
+			$item['duration'] = isset($durationInfo) ? (float) $durationInfo : null;
+			while (isset($cards[$timestamp])) {
+				$item['timestamp'] = ++$timestamp;
+			}
+			$cards[$timestamp] = $item;
 		}
-		$res[$key] = $assignees;
 
-		return $res;
+		// Sort card by date asc
+		ksort($cards);
+
+		return $cards;
 	}
 }

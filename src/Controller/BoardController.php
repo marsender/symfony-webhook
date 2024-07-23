@@ -17,6 +17,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[Route(path: '/board')]
 class BoardController extends AbstractController
 {
+	private const cTempPath = '/tmp';
+
 	public function __construct(
 		private readonly MattermostBoardService $mattermostBoardService,
 		private readonly TranslatorInterface $translator,
@@ -38,7 +40,7 @@ class BoardController extends AbstractController
 	}
 
 	#[Route(path: '/export', name: 'app_board_export')]
-	public function board(Request $request): Response
+	public function export(Request $request): Response
 	{
 		$repsitories = [];
 		$repsitories['Garnier'] = 'Garnier/projects';
@@ -51,31 +53,16 @@ class BoardController extends AbstractController
 		$form->handleRequest($request);
 		if ($form->isSubmitted() && $form->isValid()) {
 			$data = $form->getData();
-			$content = $this->getDownloadExportContent($data);
-
-			$this->saveContent($data, $content);
-
-			// Create a new filesystem object
+			$content = $this->getBoardContent($data);
+			// Save content to repository path
+			$this->saveToRepoExportPath($data, $content);
+			// Save content for download
+			$fileName = 'board.txt';
 			$filesystem = new Filesystem();
-			$tempFile = $filesystem->tempnam('/tmp', 'board_', '.txt');
+			$tempFile = sprintf('%s/%s', self::cTempPath, $fileName);
 			$filesystem->dumpFile($tempFile, $content);
 
-			return $this->serveFile($tempFile, 'text/plain');
-
-			// $response = new Response($content);
-			// $disposition = HeaderUtils::makeDisposition(
-			// 	HeaderUtils::DISPOSITION_ATTACHMENT,
-			// 	'cra.txt'
-			// );
-			// $response->headers->set('Content-Disposition', $disposition);
-			// $response->headers->set('Content-Type', 'text/plain');
-			// // No cache headers
-			// $response->headers->set('Expires', 'Mon, 26 Jul 1997 05:00:00 GMT');
-			// $response->headers->set('Last-Modified', gmdate('D, d M Y H:i:s').' GMT');
-			// $response->headers->set('Cache-Control', 'no-store, no-cache, must-revalidate');
-			// $response->headers->set('Cache-Control', 'post-check=0, pre-check=0', false);
-			// $response->headers->set('Pragma', 'no-cache');
-			// return $response;
+			return $this->redirectToRoute('app_board_export_download', ['fileName' => $fileName]);
 		}
 
 		return $this->render('board/export.html.twig', [
@@ -83,12 +70,23 @@ class BoardController extends AbstractController
 		]);
 	}
 
-	private function getDownloadExportContent(array $data): string
+	#[Route(path: '/export/download/{fileName}', name: 'app_board_export_download')]
+	public function boardExportDownload(string $fileName): BinaryFileResponse
 	{
-		$title = $data['title'];
+		$tempFile = sprintf('%s/%s', self::cTempPath, $fileName);
+
+		return $this->serveFile($tempFile, 'text/plain');
+	}
+
+	/**
+	 * Export the board of a repo and format content.
+	 */
+	private function getBoardContent(array $data): string
+	{
 		$repository = $data['repository'];
 		$dateMin = $data['dateMin'];
 		$dateMax = $data['dateMax'];
+		$week = $data['week'];
 
 		$items = $this->mattermostBoardService->exportRepository($repository, $dateMin, $dateMax);
 		if (null === $items) {
@@ -110,8 +108,7 @@ class BoardController extends AbstractController
 		$header[] = $lineSep;
 		$parts = explode('/', (string) $repository);
 		$repoName = $parts[0];
-		$title = empty($title) ? $repoName : $title;
-		$line = sprintf('## %s %s %s', $title, $this->translator->trans('board.export.activity'), $period);
+		$line = sprintf('## %s %s %s', $repoName, $this->translator->trans('board.export.activity'), $period);
 		$header[] = $line;
 		$header[] = $lineSep;
 		$header[] = '';
@@ -120,7 +117,6 @@ class BoardController extends AbstractController
 		$lastWeek = '';
 		$totalDuration = 0;
 		$content = [];
-		$displayWeek = ('Facility' === $repoName);
 		foreach ($items as $item) {
 			$timestamp = $item['timestamp'];
 			$date = $item['date'];
@@ -129,7 +125,7 @@ class BoardController extends AbstractController
 				$totalDuration += $duration;
 			}
 			// Add week line
-			if ($displayWeek) {
+			if ($week) {
 				$week = sprintf('%s %s', $this->translator->trans('board.export.week'), $date->format('W'));
 				if ($week !== $lastWeek) {
 					$line = sprintf('%-5s%s', '0', $week);
@@ -155,7 +151,10 @@ class BoardController extends AbstractController
 		return implode("\n", array_merge($header, $content, $footer));
 	}
 
-	private function saveContent(array $data, string $content): bool
+	/**
+	 * Save content into the repository export path.
+	 */
+	private function saveToRepoExportPath(array $data, string $content): bool
 	{
 		if ('' === $this->boardExportPath) {
 			return false;
@@ -183,11 +182,10 @@ class BoardController extends AbstractController
 
 	private function serveFile(string $filePath, string $contentType): BinaryFileResponse
 	{
-		$response = new BinaryFileResponse($filePath);
 		$file = new \SplFileInfo($filePath);
+		$response = new BinaryFileResponse($file);
 
 		// Set headers
-		// $response->headers->set('Cache-Control', 'private');
 		$response->headers->set('Content-Type', $contentType);
 		$response->headers->set('Content-Disposition', HeaderUtils::makeDisposition(
 			ResponseHeaderBag::DISPOSITION_ATTACHMENT,
