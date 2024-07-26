@@ -8,3 +8,6 @@ framework:
       gitlab:
         service: App\Webhook\GitlabWebhookParser
         secret: '%env(GITLAB_WEBHOOK_SECRET)%'
+      glpi:
+        service: App\Webhook\GlpiWebhookParser
+        secret: '%env(GLPI_WEBHOOK_SECRET)%'

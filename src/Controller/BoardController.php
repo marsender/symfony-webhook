@@ -42,10 +42,6 @@ class BoardController extends AbstractController
 	#[Route(path: '/export', name: 'app_board_export')]
 	public function export(Request $request): Response
 	{
-		$repsitories = [];
-		$repsitories['Garnier'] = 'Garnier/projects';
-		$repsitories['Facility'] = 'Facility/projects';
-		$repsitories['Alveos'] = 'Alveos/easylibrary_back';
 		$options['repository'] = $this->mattermostBoardService->getRepositories();
 
 		$form = $this->createForm(ExportBoardType::class, null, $options);
@@ -94,7 +90,7 @@ class BoardController extends AbstractController
 			throw new \LogicException($error);
 		}
 
-		// Compute activity period
+		// Compute board activity period
 		$firsDayOfMonth = new \DateTime('first day of this month');
 		$lastDayOfMonth = new \DateTime('last day of this month');
 		if ($dateMin->format('Y-m-d') == $firsDayOfMonth->format('Y-m-d') && $dateMax->format('Y-m-d') == $lastDayOfMonth->format('Y-m-d')) {
@@ -166,14 +162,14 @@ class BoardController extends AbstractController
 		$repository = $data['repository'];
 		$parts = explode('/', (string) $repository);
 		$repoName = $parts[0];
-		$path = sprintf('%s/%s/cra', $this->boardExportPath, $repoName);
+		$path = sprintf('%s/%s', $this->boardExportPath, $repoName);
 		if (!$filesystem->exists($path)) {
 			return false;
 		}
 
 		// Init file path
 		$dateTime = $data['dateMin'];
-		$filePath = sprintf('%s/Cra_%s.txt', $path, $dateTime->format('Y-m'));
+		$filePath = sprintf('%s/Board_%s.txt', $path, $dateTime->format('Y-m'));
 
 		$filesystem->dumpFile($filePath, $content);
 

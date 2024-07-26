@@ -8,7 +8,7 @@ board:
     dateMin: Date min
     dateMax: Date max
     export: Export
-    activity: activity
+    activity: board activity
     week: Week
 
 test:

@@ -14,7 +14,7 @@ use Symfony\Component\RemoteEvent\RemoteEvent;
 use Symfony\Component\Webhook\Client\AbstractRequestParser;
 use Symfony\Component\Webhook\Exception\RejectWebhookException;
 
-final class GitlabWebhookParser extends AbstractRequestParser
+final class GlpiWebhookParser extends AbstractRequestParser
 {
 	public function __construct(
 		// private readonly LoggerInterface $logger
@@ -22,23 +22,23 @@ final class GitlabWebhookParser extends AbstractRequestParser
 	}
 
 	/**
-	 * Request matcher that will catch /webhook/gitlab path.
+	 * Request matcher that will catch /webhook/glpi path.
 	 */
 	protected function getRequestMatcher(): RequestMatcherInterface
 	{
 		// Check the conditions that the incoming webhook request
 		// must match in order to be handled by this parser
 		return new ChainRequestMatcher([
-			// new HostRequestMatcher('gitlab.com'),
+			// new HostRequestMatcher('glpi.website.com'),
 			new IsJsonRequestMatcher(),
 			new MethodRequestMatcher('POST'),
 		]);
 	}
 
 	/**
-	 * Webhook parsing and validation.
+	 * GLPI FPWebhook Webhook parsing and validation.
 	 *
-	 * @see https://docs.gitlab.com/ee/user/project/integrations/webhooks.html
+	 * @see https://github.com/FutureProcessing/glpi-webhook
 	 */
 	protected function doParse(Request $request, #[\SensitiveParameter] string $secret): ?RemoteEvent
 	{
@@ -57,23 +57,20 @@ final class GitlabWebhookParser extends AbstractRequestParser
 		// $this->logger->debug($payload);
 
 		// Validate the request payload
-		if (!$payload->has('user') || !$payload->has('project')) {
+		if (!$payload->has('ticket_id')) {
 			throw new RejectWebhookException(Response::HTTP_BAD_REQUEST, 'Request payload does not contain required fields');
 		}
 
 		// Parse the request payload and return a RemoteEvent object
 		$payload = $payload->all();
 
-		$sender = $payload['user']['username'] ?? null;
-		if (null === $sender) {
-			throw new RejectWebhookException(Response::HTTP_NOT_ACCEPTABLE, 'Webhook has no user username');
+		$ticketId = $payload['ticket_id'] ?? null;
+		if (null === $ticketId) {
+			throw new RejectWebhookException(Response::HTTP_NOT_ACCEPTABLE, 'Webhook has no ticket_id');
 		}
 
-		$repositoryName = $payload['project']['path_with_namespace'] ?? null;
-		if (null === $repositoryName) {
-			throw new RejectWebhookException(Response::HTTP_NOT_ACCEPTABLE, 'Webhook has no repository name');
-		}
+		$name = 'glpi-ticket';
 
-		return new RemoteEvent($repositoryName, $sender, $payload);
+		return new RemoteEvent($name, $ticketId, $payload);
 	}
 }

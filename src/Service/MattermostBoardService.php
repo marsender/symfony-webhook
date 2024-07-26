@@ -70,6 +70,7 @@ class MattermostBoardService
 			}
 			$res[$key] = $key;
 		}
+		ksort($res);
 
 		return $res;
 	}

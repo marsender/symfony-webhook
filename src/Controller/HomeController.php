@@ -14,6 +14,7 @@ class HomeController extends AbstractController
 		$items = [];
 		$items[] = '/webhook/github';
 		$items[] = '/webhook/gitlab';
+		$items[] = '/webhook/glpi';
 		$items[] = '/board';
 		$items[] = '/test';
 

@@ -43,6 +43,7 @@ abstract class AbstractWebhookTestCase extends WebTestCase
 		$uri = match ($this->getProvider()) {
 			'github' => '/webhook/github',
 			'gitlab' => '/webhook/gitlab',
+			'glpi' => '/webhook/glpi',
 		};
 
 		$this->kernelBrowser->request(method: 'POST', uri: $uri, server: $headers, content: json_encode($payload));

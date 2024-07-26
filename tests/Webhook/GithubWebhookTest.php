@@ -14,7 +14,7 @@ class GithubWebhookTest extends AbstractWebhookTestCase
 		return [$this->getPingPayload(), $this->getIssueAssignedPayload(), $this->getIssueOpenGiteaPayloadString(), $this->getIssueOpenPayloadString(), $this->getIssueOpenPayloadRepo(), $this->getIssueClosedPayload()];
 	}
 
-	public function testGitlabWebhook(): void
+	public function testGithubWebhook(): void
 	{
 		$this->testPayloads();
 	}
