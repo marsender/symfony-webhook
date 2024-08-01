@@ -422,7 +422,8 @@ class MattermostBoardService
 			$jsonDateInfo = json_decode((string) $dateInfo, true);
 			$timestamp = $jsonDateInfo['from'];
 			$dateFrom = new \DateTime('@'.($timestamp / 1000));
-			if ($dateFrom < $dateMin || $dateFrom > $dateMax) {
+			$date = new \DateTime($dateFrom->format('Y-m-d'));
+			if ($date < $dateMin || $date > $dateMax) {
 				continue;
 			}
 			$item = [];
