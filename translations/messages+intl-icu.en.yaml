@@ -5,11 +5,12 @@ board:
   title: Boards
   export:
     repository: Repository
-    dateMin: Date min
-    dateMax: Date max
+    dateMin: Min date
+    dateMax: Max date
     export: Export
-    activity: board activity
+    dailyRate: Daily rate
     week: Week
+    activity: board activity
 
 test:
   title: Tests

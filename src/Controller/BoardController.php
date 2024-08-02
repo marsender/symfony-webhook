@@ -22,7 +22,8 @@ class BoardController extends AbstractController
 	public function __construct(
 		private readonly MattermostBoardService $mattermostBoardService,
 		private readonly TranslatorInterface $translator,
-		private readonly string $boardExportPath
+		private readonly string $boardExportPath,
+		private readonly string $boardDailyRate
 	) {
 	}
 
@@ -43,6 +44,7 @@ class BoardController extends AbstractController
 	public function export(Request $request): Response
 	{
 		$options['repository'] = $this->mattermostBoardService->getRepositories();
+		$options['dailyRate'] = (int) $this->boardDailyRate;
 
 		$form = $this->createForm(ExportBoardType::class, null, $options);
 
@@ -91,9 +93,9 @@ class BoardController extends AbstractController
 		}
 
 		// Compute board activity period
-		$firsDayOfMonth = new \DateTime('first day of this month');
-		$lastDayOfMonth = new \DateTime('last day of this month');
-		if ($dateMin->format('Y-m-d') == $firsDayOfMonth->format('Y-m-d') && $dateMax->format('Y-m-d') == $lastDayOfMonth->format('Y-m-d')) {
+		$firsDayOfMonth = new \DateTime($dateMin->format('Y-m-01')); // first day of month
+		$lastDayOfMonth = new \DateTime($dateMax->format('Y-m-t')); // last day of month
+		if ($dateMin->format('Y-m-d') == $firsDayOfMonth->format('Y-m-d') && $dateMax->format('Y-m-d') == $lastDayOfMonth->format('Y-m-d') && $firsDayOfMonth->format('Y-m') == $lastDayOfMonth->format('Y-m')) {
 			$period = $dateMin->format('m/Y');
 		} else {
 			$period = sprintf('from %s to %s', $dateMin->format('j M Y'), $dateMax->format('j M Y'));
@@ -140,8 +142,8 @@ class BoardController extends AbstractController
 		// Add total duration
 		$footer = [];
 		$footer[] = '';
-		$totalDurationInfo = str_replace(',0', '', number_format($totalDuration, 1, ','));
-		$footer[] = sprintf('# Total: %s', $totalDurationInfo);
+		$info = sprintf('# Total: %s days (%s hours) %s€', number_format($totalDuration / 8, 2, ','), number_format($totalDuration, 1, ','), number_format($totalDuration * $this->boardDailyRate / 8, 2, ',', ''));
+		$footer[] = str_replace([',00', ',0'], ['', ''], $info);
 		$footer[] = '';
 
 		return implode("\n", array_merge($header, $content, $footer));

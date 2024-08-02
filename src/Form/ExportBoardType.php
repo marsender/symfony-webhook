@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -18,6 +19,7 @@ class ExportBoardType extends AbstractType
 			->add('repository', ChoiceType::class, ['label' => 'board.export.repository', 'choices' => $options['repository'], 'choice_translation_domain' => false])
 			->add('dateMin', DateType::class, ['label' => 'board.export.dateMin', 'data' => new \DateTime('first day of this month'), 'required' => false])
 			->add('dateMax', DateType::class, ['label' => 'board.export.dateMax', 'data' => new \DateTime('last day of this month'), 'required' => false])
+			->add('dailyRate', IntegerType::class, ['label' => 'board.export.dailyRate', 'required' => false, 'data' => $options['dailyRate']])
 			->add('week', CheckboxType::class, ['label' => 'board.export.week', 'required' => false])
 			->add('export', SubmitType::class, ['label' => 'board.export.export']);
 	}
@@ -26,8 +28,10 @@ class ExportBoardType extends AbstractType
 	{
 		$optionsResolver->setDefaults([
 			'repository' => [],
+			'dailyRate' => 0,
 		]);
 
 		$optionsResolver->setAllowedTypes('repository', 'array');
+		$optionsResolver->setAllowedTypes('dailyRate', 'integer');
 	}
 }
