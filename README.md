@@ -22,7 +22,7 @@ This project require the following to get started :
 Clone [Symfony webhook repository](https://github.com/marsender/symfony-webhook)
 
 ```bash
-git clone git@github.com:marsender/symfony-webhook.git
+git clone https://github.com/marsender/symfony-webhook.git
 cd symfony-webhook
 ```
 
