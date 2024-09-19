@@ -45,8 +45,8 @@
 		"symfony/web-link": "7.1.*",
 		"symfony/webhook": "7.1.*",
 		"symfony/yaml": "7.1.*",
-		"twig/extra-bundle": "^3.8",
-		"twig/twig": "^3.8"
+		"twig/extra-bundle": "^3.13",
+		"twig/twig": "^3.14"
 	},
 	"config": {
 		"allow-plugins": {

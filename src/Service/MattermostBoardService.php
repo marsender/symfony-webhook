@@ -31,7 +31,7 @@ class MattermostBoardService
 		private readonly string $mattermostLoginUser,
 		private readonly string $mattermostLoginPassword,
 		private readonly string $mattermostBoardApiUrl,
-		private readonly string $mattermostBoardConfig
+		private readonly string $mattermostBoardConfig,
 	) {
 	}
 

@@ -13,7 +13,7 @@ class GlpiConsumer implements ConsumerInterface
 	private array $payload;
 
 	public function __construct(
-		private readonly MattermostBoardService $mattermostBoardService
+		private readonly MattermostBoardService $mattermostBoardService,
 	) {
 	}
 

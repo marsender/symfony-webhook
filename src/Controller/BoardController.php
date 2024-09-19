@@ -23,7 +23,7 @@ class BoardController extends AbstractController
 		private readonly MattermostBoardService $mattermostBoardService,
 		private readonly TranslatorInterface $translator,
 		private readonly string $boardExportPath,
-		private readonly string $boardDailyRate
+		private readonly string $boardDailyRate,
 	) {
 	}
 
