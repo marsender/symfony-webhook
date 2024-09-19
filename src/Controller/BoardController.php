@@ -95,7 +95,7 @@ class BoardController extends AbstractController
 		// Compute board activity period
 		$firsDayOfMonth = new \DateTime($dateMin->format('Y-m-01')); // first day of month
 		$lastDayOfMonth = new \DateTime($dateMax->format('Y-m-t')); // last day of month
-		if ($dateMin->format('Y-m-d') == $firsDayOfMonth->format('Y-m-d') && $dateMax->format('Y-m-d') == $lastDayOfMonth->format('Y-m-d') && $firsDayOfMonth->format('Y-m') == $lastDayOfMonth->format('Y-m')) {
+		if ($dateMin->format('Y-m-d') === $firsDayOfMonth->format('Y-m-d') && $dateMax->format('Y-m-d') === $lastDayOfMonth->format('Y-m-d') && $firsDayOfMonth->format('Y-m') === $lastDayOfMonth->format('Y-m')) {
 			$period = $dateMin->format('m/Y');
 		} else {
 			$period = sprintf('from %s to %s', $dateMin->format('j M Y'), $dateMax->format('j M Y'));
