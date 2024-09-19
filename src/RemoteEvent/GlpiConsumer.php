@@ -28,7 +28,6 @@ class GlpiConsumer implements ConsumerInterface
 		$this->payload = $remoteEvent->getPayload();
 
 		// Todo
-		return;
 
 		$eventType = $this->payload['event_type'] ?? null;
 		if ('issue' !== $eventType) {
