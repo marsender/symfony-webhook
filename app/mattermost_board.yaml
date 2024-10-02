@@ -39,6 +39,16 @@ repos:
       durationKey: a47px9zi6ug3hrfajne7ekezkeo
       taskKey: a4euiir4xgn6o8hqupg5s1qacnc
 
+  Objectif100M/projects:
+    boardId: b73rkdfksftn33bzaprg8t1jn5h
+    properties:
+      dateKey: adhstgkj3usbw5ne6kaziwrdhbh
+      statusKey: adj7gm9wxsy1w61hfksxzkce75h
+      statusValue: a59obmejixs19cefych19kyxmaw
+      urlKey: a45oaj4wx8k6j5h9wbc769neqga
+      assignedKey: asyzr433wkogfectua9rnh894zr
+      durationKey: a4kcdm9scc98fkrh4rx4qrm5bqh
+
   WorkingShare/projects:
     boardId: b39eagpai97gq3ngdg6z9hpsipo
     properties:
@@ -112,5 +122,7 @@ repos:
   facility-project/backend: Facility/projects
 
   workingshare/ws-website: WorkingShare/projects
+
+  objectif100m/plateforme: Objectif100M/projects
 
   default: Opale/projects
