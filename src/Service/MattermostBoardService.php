@@ -4,6 +4,7 @@ namespace App\Service;
 
 // use GuzzleHttp\Client;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -86,7 +87,7 @@ class MattermostBoardService
 				'message' => $e->getMessage(),
 			]);
 
-			return false;
+			throw new FileNotFoundException($e->getMessage());
 		}
 
 		return true;

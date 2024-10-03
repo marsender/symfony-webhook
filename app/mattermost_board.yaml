@@ -1,7 +1,6 @@
 users:
   marsender: ynrzgwid4bb3jgn377jqsoy8oc
-  QDZantoine: t4wjf6qs47gb3qcpceysxaq6de
-  Jouni-rinnemaki: am7dhotfgfgppjbzxy7u8bqgka
+  other-user: xxx
 
 # Repos names are either
 # - a name to be reused for the config of another repo
@@ -17,113 +16,9 @@ repos:
       assignedKey: asyzr433wkogfectua9rnh894zr
       durationKey: aqrhi4z86f7do8pkfa8gu686u3h
 
-  Garnier/projects:
-    boardId: bmhfssuowrpr8df8d5fkux8dfqa
-    properties:
-      dateKey: adhstgkj3usbw5ne6kaziwrdhbh
-      statusKey: adj7gm9wxsy1w61hfksxzkce75h
-      statusValue: a59obmejixs19cefych19kyxmaw
-      urlKey: a45oaj4wx8k6j5h9wbc769neqga
-      assignedKey: asyzr433wkogfectua9rnh894zr
-      durationKey: arc69efic3oa9rfjyoa6nzrupso
-      taskKey: asmjd6bgxrr9rxf8jso73azp4te
-
-  Facility/projects:
-    boardId: bzphph86g93dt7gebewicbhgnny
-    properties:
-      dateKey: adhstgkj3usbw5ne6kaziwrdhbh
-      statusKey: adj7gm9wxsy1w61hfksxzkce75h
-      statusValue: a59obmejixs19cefych19kyxmaw
-      urlKey: a45oaj4wx8k6j5h9wbc769neqga
-      assignedKey: asyzr433wkogfectua9rnh894zr
-      durationKey: a47px9zi6ug3hrfajne7ekezkeo
-      taskKey: a4euiir4xgn6o8hqupg5s1qacnc
-
-  Objectif100M/projects:
-    boardId: b73rkdfksftn33bzaprg8t1jn5h
-    properties:
-      dateKey: adhstgkj3usbw5ne6kaziwrdhbh
-      statusKey: adj7gm9wxsy1w61hfksxzkce75h
-      statusValue: a59obmejixs19cefych19kyxmaw
-      urlKey: a45oaj4wx8k6j5h9wbc769neqga
-      assignedKey: asyzr433wkogfectua9rnh894zr
-      durationKey: a4kcdm9scc98fkrh4rx4qrm5bqh
-      taskKey: ayzpagptcayu6a4h8pybtjzfh4w
-
-  WorkingShare/projects:
-    boardId: b39eagpai97gq3ngdg6z9hpsipo
-    properties:
-      dateKey: adhstgkj3usbw5ne6kaziwrdhbh
-      statusKey: adj7gm9wxsy1w61hfksxzkce75h
-      statusValue: a59obmejixs19cefych19kyxmaw
-      urlKey: a45oaj4wx8k6j5h9wbc769neqga
-      assignedKey: asyzr433wkogfectua9rnh894zr
-      durationKey: a4kcdm9scc98fkrh4rx4qrm5bqh
-
-  Alveos/easylibrary_back:
-    boardId: b8crmfdz4jtgt3rzeogww9tzqxc
-    properties:
-      dateKey: a9ieh4p9kmq17fynqyspioi5b5w
-      statusKey: ajexcf358qpw6bwhtpsapucbk3e
-      statusValue: a6fd8iyp33t9ckgbrorwbep4j6e
-      urlKey: ac95t57ir869uacidk3w3dwf8qh
-      assignedKey: auzf4n7979j895njp7qw7i3hpto
-      durationKey: a7ux11eztzqqgnamzqd9z588uxo
-
-  QDZantoine/projects:
-    boardId: bttz8yzp5htbgdgwbm3a8aszf7a
-    properties:
-      dateKey: a5m9ngza95egtm64nww3w9agjja
-      statusKey: ap4cno3hufwtzrwjyt6jusihrzy
-      statusValue: ayfyddrgs7bq5zsjn6d146ox78c
-      urlKey: a51xn7pcmdyp7zepzuxfbqgaxur
-      assignedKey: ay6zw4ohtou871oeb9364kfsm4w
-      durationKey: as76ecdyojgbra1sye1khhsn5ke
-
-  Jules/projects:
-    boardId: b3t3dne4jgff4mriw9igyafyuur
-    properties:
-      dateKey: aiz9t6wz5bfzf7n5q99big9344c
-      statusKey: auixkgzpweq77d7x9b98cw6gw3e
-      statusValue: a3sa3y94o1y3onhwotuzqxcxhdc
-      urlKey: a5ry3q77jraod5dk9od4sdk318c
-      assignedKey: aukh6okxkwqibjo1ychphp4yx1a
-      durationKey: afr1e6qbpduhnk8u4sxixb9y5sc
-
+  marsender/solidjs-project: Opale/projects
   marsender/react-dolibarr-front: Opale/projects
   marsender/symfony-webhook: Opale/projects
   marsender/symfony-assetmapper: Opale/projects
-  marsender/ratio-force: Jules/projects
-
-  QDZantoine/spot-to-work: QDZantoine/projects
-  QDZantoine/api-chat: QDZantoine/projects
-  QDZantoine/front-chat: QDZantoine/projects
-
-  classiques-garnier/ansible_infra: Garnier/projects
-  classiques-garnier/ansible_roles: Garnier/projects
-  classiques-garnier/garnier_admin: Garnier/projects
-  classiques-garnier/garnier_api: Garnier/projects
-  classiques-garnier/garnier_atoll: Garnier/projects
-  classiques-garnier/garnier_bases: Garnier/projects
-  classiques-garnier/garnier_blf: Garnier/projects
-  classiques-garnier/garnier_cpp: Garnier/projects
-  classiques-garnier/garnier_dev: Garnier/projects
-  classiques-garnier/garnier_docker: Garnier/projects
-  classiques-garnier/garnier_prod: Garnier/projects
-  classiques-garnier/garnier_public: Garnier/projects
-  classiques-garnier/garnier_stats: Garnier/projects
-  classiques-garnier/garnier_thelia: Garnier/projects
-  classiques-garnier/php_atk: Garnier/projects
-  classiques-garnier/php_lib: Garnier/projects
-  classiques-garnier/php_mojavi: Garnier/projects
-  classiques-garnier/php_test: Garnier/projects
-
-  marsender/facility-project: Facility/projects
-  facility-project/frontend: Facility/projects
-  facility-project/backend: Facility/projects
-
-  workingshare/ws-website: WorkingShare/projects
-
-  objectif100m/plateforme: Objectif100M/projects
 
   default: Opale/projects
