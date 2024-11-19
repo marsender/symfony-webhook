@@ -13,7 +13,6 @@
 		"doctrine/doctrine-migrations-bundle": "^3.3",
 		"doctrine/orm": "^3.1",
 		"phpdocumentor/reflection-docblock": "^5.3",
-		"phpstan/phpdoc-parser": "^1.27",
 		"runtime/frankenphp-symfony": "^0.2.0",
 		"symfony/asset": "7.1.*",
 		"symfony/asset-mapper": "7.1.*",
@@ -125,6 +124,7 @@
 	"require-dev": {
 		"friendsofphp/php-cs-fixer": "^3.52",
 		"jaschilz/php-coverage-badger": "^2.0",
+		"phpstan/phpdoc-parser": "^2.0",
 		"phpunit/phpunit": "^10.5",
 		"rector/rector": "^1.0",
 		"symfony/browser-kit": "7.1.*",
@@ -134,6 +134,6 @@
 		"symfony/phpunit-bridge": "7.1.*",
 		"symfony/stopwatch": "7.1.*",
 		"symfony/web-profiler-bundle": "7.1.*",
-		"vincentlanglet/twig-cs-fixer": "^2.9"
+		"vincentlanglet/twig-cs-fixer": "^2.10"
 	}
 }
