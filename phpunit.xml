@@ -21,7 +21,7 @@
 			<directory>tests</directory>
 		</testsuite>
 	</testsuites>
-	<!-- https://docs.phpunit.de/en/9.6/configuration.html#the-coverage-element -->
+	<!-- https://docs.phpunit.de/en/10.5/configuration.html#the-coverage-element -->
 	<coverage
 		includeUncoveredFiles="true"
 		pathCoverage="false"
