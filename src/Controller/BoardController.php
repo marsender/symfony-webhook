@@ -84,7 +84,7 @@ class BoardController extends AbstractController
 		$repository = $data['repository'];
 		$dateMin = $data['dateMin'];
 		$dateMax = $data['dateMax'];
-		$week = $data['week'];
+		$week = $data['week'] ?? false;
 
 		$items = $this->mattermostBoardService->exportRepository($repository, $dateMin, $dateMax);
 		if (null === $items) {
