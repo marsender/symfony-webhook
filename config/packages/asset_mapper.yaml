@@ -12,5 +12,3 @@ framework:
     #importmap_polyfill: false
     importmap_script_attributes:
       crossorigin: 'anonymous'
-    precompress:
-      enabled: true
