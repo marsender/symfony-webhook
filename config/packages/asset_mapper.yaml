@@ -3,6 +3,7 @@ framework:
     # The paths to make available to the asset mapper.
     paths:
       - assets/
+    missing_import_mode: strict
     excluded_patterns:
       - '*/assets/styles/_*.scss'
       - '*/assets/styles/**/_*.scss'
@@ -12,3 +13,8 @@ framework:
     #importmap_polyfill: false
     importmap_script_attributes:
       crossorigin: 'anonymous'
+
+when@prod:
+  framework:
+    asset_mapper:
+      missing_import_mode: warn
