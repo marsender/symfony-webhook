@@ -96,7 +96,7 @@ bin/console make:webhook
 
 If not already done, [install Docker Compose](https://docs.docker.com/compose/install/) (v2.10+)
 
-Read the [official doc](https://github.com/dunglas/symfony-docker)
+Read the [official doc](https://github.com/dunglas/symfony-docker/blob/main/docs/existing-project.md)
 
 Build the Docker images
 ```bash
