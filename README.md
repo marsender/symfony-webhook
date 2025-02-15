@@ -94,11 +94,11 @@ bin/console make:webhook
 
 ## Symfony Docker
 
-If not already done, [install Docker Compose](https://docs.docker.com/compose/install/) (v2.10+)
+If not already done, [install Docker Compose](https://docs.docker.com/compose/install/)
 
 Read the [official doc](https://github.com/dunglas/symfony-docker/blob/main/docs/existing-project.md)
 
-Build the Docker images
+Build the docker images
 ```bash
 docker compose build --no-cache
 ```
@@ -121,6 +121,12 @@ Debug container
 docker ps
 docker exec -ti `container-id` /bin/bash # Enter the container
 docker logs --tail 500 --follow --timestamps `container-id` # Display container logs
+```
+
+Debug php container
+```bash
+docker compose exec php php --version
+docker compose exec -ti php /bin/bash
 ```
 
 Recreate database
@@ -147,4 +153,5 @@ Browse `https//localhost:4443`
 Stop the docker container
 ```bash
 docker compose down --remove-orphans
+sudo rm -rf ./docker # To remove application database
 ```
