@@ -38,7 +38,7 @@ services:
 
 ###> doctrine/doctrine-bundle ###
   database:
-    image: mysql:${MYSQL_VERSION}
+    image: mariadb:latest
     environment:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       # You should definitely change the password in production
