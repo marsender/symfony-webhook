@@ -100,15 +100,15 @@ Read the [official doc](https://github.com/dunglas/symfony-docker/blob/main/docs
 
 Build the Docker images
 ```bash
-docker compose build --no-cache --pull
+docker compose build --no-cache
 ```
 
-Start the project
+Start the docker container
 ```bash
 HTTP_PORT=8000 \
 HTTPS_PORT=4443 \
 HTTP3_PORT=4443 \
-docker compose up -d
+docker compose up --pull always -d --wait
 ```
 
 Test database
@@ -143,3 +143,8 @@ docker compose exec php composer require `package-name`
 ```
 
 Browse `https//localhost:4443`
+
+Stop the docker container
+```bash
+docker compose down --remove-orphans
+```
