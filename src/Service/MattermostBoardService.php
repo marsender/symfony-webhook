@@ -211,7 +211,7 @@ class MattermostBoardService
 	 * https://host/api/v4/users/login
 	 *
 	 * Get csrf token from header
-	 * set-cookie: MMAUTHTOKEN=sdfdrzhizigs9858gxu8tti8ce; Path=/; Expires=Sat, 28 Sep 2024 11:13:03 GMT; Max-Age=15552000; HttpOnly; Secure
+	 * set-cookie: MMAUTHTOKEN=ChangeMe; Path=/; Expires=Sat, 28 Sep 2024 11:13:03 GMT; Max-Age=15552000; HttpOnly; Secure
 	 */
 	private function getAuthenticationToken(): ?string
 	{
