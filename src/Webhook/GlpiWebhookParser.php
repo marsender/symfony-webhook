@@ -40,7 +40,7 @@ final class GlpiWebhookParser extends AbstractRequestParser
 	 *
 	 * @see https://github.com/FutureProcessing/glpi-webhook
 	 */
-	protected function doParse(Request $request, #[\SensitiveParameter] string $secret): ?RemoteEvent
+	protected function doParse(Request $request, #[\SensitiveParameter] string $secret): RemoteEvent
 	{
 		$appEnv = $_ENV['APP_ENV'];
 

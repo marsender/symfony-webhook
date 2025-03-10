@@ -44,6 +44,7 @@ abstract class AbstractWebhookTestCase extends WebTestCase
 			'github' => '/webhook/github',
 			'gitlab' => '/webhook/gitlab',
 			'glpi' => '/webhook/glpi',
+			default => throw new \InvalidArgumentException('Unsupported provider'),
 		};
 
 		$this->kernelBrowser->request(method: 'POST', uri: $uri, server: $headers, content: json_encode($payload));

@@ -107,6 +107,9 @@
 		"rector": [
 			"vendor/bin/rector process"
 		],
+		"phpstan": [
+			"vendor/bin/phpstan analyse"
+		],
 		"fix": [
 			"composer rector && composer test && composer php-cs-fixer && composer twig-cs-fixer"
 		]

@@ -40,7 +40,7 @@ final class GitlabWebhookParser extends AbstractRequestParser
 	 *
 	 * @see https://docs.gitlab.com/ee/user/project/integrations/webhooks.html
 	 */
-	protected function doParse(Request $request, #[\SensitiveParameter] string $secret): ?RemoteEvent
+	protected function doParse(Request $request, #[\SensitiveParameter] string $secret): RemoteEvent
 	{
 		$appEnv = $_ENV['APP_ENV'];
 
