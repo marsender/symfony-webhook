@@ -128,6 +128,7 @@
 		"friendsofphp/php-cs-fixer": "^3.70.2",
 		"jaschilz/php-coverage-badger": "^2.0",
 		"phpstan/phpdoc-parser": "^2.0",
+		"phpstan/phpstan": "^2.1",
 		"phpunit/phpunit": "^10.5",
 		"rector/rector": "^2.0.10",
 		"symfony/browser-kit": "^7.2.4",
