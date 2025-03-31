@@ -2,10 +2,8 @@
 
 declare(strict_types=1);
 
-use Rector\CodeQuality\Rector\Class_\InlineConstructorDefaultToPropertyRector;
 use Rector\Config\RectorConfig;
 use Rector\Naming\Rector\ClassMethod\RenameParamToMatchTypeRector;
-use Rector\TypeDeclaration\Rector\ClassMethod\AddVoidReturnTypeWhereNoReturnRector;
 
 /*
  * @see https://getrector.com/documentation
@@ -28,8 +26,6 @@ return RectorConfig::configure()
 	])
 	// Register rules
 	->withRules([
-		InlineConstructorDefaultToPropertyRector::class,
-		AddVoidReturnTypeWhereNoReturnRector::class,
 		RenameParamToMatchTypeRector::class,
 	])
 	->withPhpSets(php82: true)
