@@ -6,5 +6,5 @@ controllers:
   type: attribute
 
 webhook:
-  resource: '@FrameworkBundle/Resources/config/routing/webhook.xml'
+  resource: '@FrameworkBundle/Resources/config/routing/webhook.php'
   prefix: /webhook
