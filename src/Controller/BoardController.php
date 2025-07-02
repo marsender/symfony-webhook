@@ -143,7 +143,7 @@ class BoardController extends AbstractController
 		$footer = [];
 		$footer[] = '';
 		$info = sprintf('# Total: %s days (%s hours) %s €', number_format($totalDuration / 8, 2, ','), number_format($totalDuration, 1, ','), number_format($totalDuration * (int) $this->boardDailyRate / 8, 2, ',', ''));
-		$info = str_replace([',00', ',0 '], ['', ''], $info);
+		$info = str_replace([',00', ',0 '], ['', ' '], $info);
 		$footer[] = $info;
 		$footer[] = '';
 
