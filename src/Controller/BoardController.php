@@ -17,7 +17,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[Route(path: '/board')]
 class BoardController extends AbstractController
 {
-	private const cTempPath = '/tmp';
+	private const string cTempPath = '/tmp';
 
 	public function __construct(
 		private readonly MattermostBoardService $mattermostBoardService,

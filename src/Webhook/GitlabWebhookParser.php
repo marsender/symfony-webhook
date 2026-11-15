@@ -16,11 +16,6 @@ use Symfony\Component\Webhook\Exception\RejectWebhookException;
 
 final class GitlabWebhookParser extends AbstractRequestParser
 {
-	public function __construct(
-		// private readonly LoggerInterface $logger
-	) {
-	}
-
 	/**
 	 * Request matcher that will catch /webhook/gitlab path.
 	 */

@@ -16,11 +16,6 @@ use Symfony\Component\Webhook\Exception\RejectWebhookException;
 
 final class GlpiWebhookParser extends AbstractRequestParser
 {
-	public function __construct(
-		// private readonly LoggerInterface $logger
-	) {
-	}
-
 	/**
 	 * Request matcher that will catch /webhook/glpi path.
 	 */

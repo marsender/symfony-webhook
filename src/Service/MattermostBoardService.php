@@ -16,7 +16,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  */
 class MattermostBoardService
 {
-	private const authTokenPattern = 'MMAUTHTOKEN=';
+	private const string authTokenPattern = 'MMAUTHTOKEN=';
 
 	private array $config = [];
 	private array $boardConfig = [];
@@ -87,7 +87,7 @@ class MattermostBoardService
 				'message' => $e->getMessage(),
 			]);
 
-			throw new FileNotFoundException($e->getMessage());
+			throw new FileNotFoundException($e->getMessage(), $e->getCode(), $e);
 		}
 
 		return true;
@@ -101,9 +101,7 @@ class MattermostBoardService
 		// Board config is an array or the name of a board config array
 		$boardConfig = $this->config['repos'][$repository] ?? null;
 		// If not set, try to get the default board config
-		if (null === $boardConfig) {
-			$boardConfig = $this->config['repos']['default'] ?? null;
-		}
+		$boardConfig ??= $this->config['repos']['default'] ?? null;
 		// If board config is a string, get the repo with this key
 		if (is_string($boardConfig)) {
 			$boardConfig = $this->config['repos'][$boardConfig] ?? null;

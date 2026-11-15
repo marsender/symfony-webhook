@@ -16,11 +16,6 @@ use Symfony\Component\Webhook\Exception\RejectWebhookException;
 
 final class GithubWebhookParser extends AbstractRequestParser
 {
-	public function __construct(
-		// private readonly LoggerInterface $logger
-	) {
-	}
-
 	/**
 	 * Request matcher that will catch /webhook/github path.
 	 */
