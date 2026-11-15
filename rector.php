@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
-use Rector\Naming\Rector\ClassMethod\RenameParamToMatchTypeRector;
 
 /*
  * @see https://getrector.com/documentation
@@ -22,13 +21,10 @@ return RectorConfig::configure()
 	// https://getrector.com/documentation/ignoring-rules-or-paths
 	->withSkip([
 		__DIR__.'/migrations',
+		__DIR__.'/config/reference.php',
 		__DIR__.'/src/Entity/ResetPasswordRequest.php',
 	])
-	// Register rules
-	->withRules([
-		RenameParamToMatchTypeRector::class,
-	])
-	->withPhpSets(php82: true)
+	->withPhpSets(php84: true)
 	// Upgrade annotations to attributes
 	// https://getrector.com/documentation/set-lists
 	->withAttributesSets(symfony: true, doctrine: true, phpunit: true, sensiolabs: true)

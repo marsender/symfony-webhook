@@ -3,7 +3,9 @@
 ![CI](https://github.com/marsender/symfony-webhook/workflows/CI/badge.svg)
 ![Code Coverage](https://github.com/marsender/symfony-webhook/raw/main/.github/badges/coverage.svg)
 
-This project is a starter webapp with Symfony 7 to setup webhooks.
+## Description
+
+This is a starter web application with Symfony 8 to setup webhooks.
 
 References :
 
@@ -15,7 +17,7 @@ References :
 
 This project require the following to get started :
 
-- PHP 8.2
+- PHP 8.4
 
 ## Install
 
