@@ -28,6 +28,12 @@ git clone https://github.com/marsender/symfony-webhook.git
 cd symfony-webhook
 ```
 
+Fix rights on var
+```bash
+apt-get install -y acl
+stat -c '%U:%G %a %n' var var/cache var/cache/* var/log 2>/dev/null; if ! command -v setfacl >/dev/null; then echo "STOP: setfacl missing (sudo apt-get install -y acl), nothing done"; elif ! id www-data >/dev/null 2>&1; then echo "STOP: no www-data user, nothing done"; else   sudo setfacl -R -m u:www-data:rwX -m u:didier:rwX var &&   sudo setfacl -dR -m u:www-data:rwX -m u:didier:rwX var &&   sudo find var/cache -mindepth 1 -maxdepth 1 \( -name '*~' -o -name '.*' \) -exec rm -rf {} + &&   sudo -u www-data bin/console cache:clear --no-ansi 2>&1 | tail -3 && composer run-script auto-scripts 2>&1 | tail -5 &&   getfacl -p var/cache | grep -E 'user:|default:user:'; fi
+```
+
 Install php dependencies
 ```bash
 composer install
