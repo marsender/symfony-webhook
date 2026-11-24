@@ -39,11 +39,10 @@ final class GitlabWebhookParser extends AbstractRequestParser
 	{
 		$appEnv = $_ENV['APP_ENV'];
 
-		// Validate the request against $secret
+		// Validate the request against $secret: GitLab sends the webhook secret token as is
 		if ('test' !== $appEnv && '' !== $secret) {
-			$signature = $request->headers->get('X-Hub-Signature-256');
-			$secretSignature = 'sha256='.hash_hmac('sha256', $request->getContent(), $secret);
-			if (!is_string($signature) || !str_starts_with($signature, 'sha256=')	|| !hash_equals($secretSignature, $signature)) {
+			$token = $request->headers->get('X-Gitlab-Token');
+			if (!is_string($token) || !hash_equals($secret, $token)) {
 				throw new RejectWebhookException(Response::HTTP_UNAUTHORIZED, 'Invalid authentication token');
 			}
 		}
