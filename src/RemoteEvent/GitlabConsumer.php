@@ -57,11 +57,8 @@ class GitlabConsumer implements ConsumerInterface
 		}
 		$data['url'] = $url;
 
-		$assignees = $this->payload['assignees'] ?? null;
-		if (null === $assignees) {
-			throw new \LogicException('Gitlab issue assignees are not set');
-		}
-		$data['assignees'] = $assignees;
+		// GitLab omits the assignees key when the issue has no assignee
+		$data['assignees'] = $this->payload['assignees'] ?? [];
 
 		$this->mattermostBoardService->consume($data);
 	}

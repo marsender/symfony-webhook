@@ -13,12 +13,54 @@ class GitlabWebhookTest extends AbstractWebhookTestCase
 
 	protected function getPayloads(): array
 	{
-		return [$this->getIssueOpenGitlabPayloadString()];
+		return [
+			$this->getIssueOpenGitlabPayloadString(),
+			$this->getIssueUpdateUnassignedGitlabPayload(),
+		];
 	}
 
 	public function testGitlabWebhook(): void
 	{
 		$this->testPayloads();
+	}
+
+	/**
+	 * GitLab omits the top-level assignees key when the issue has no assignee.
+	 */
+	private function getIssueUpdateUnassignedGitlabPayload(): array
+	{
+		return json_decode('
+		{
+			"object_kind": "issue",
+			"event_type": "issue",
+			"user": {
+				"id": 15684224,
+				"name": "Didier Corbière",
+				"username": "marsender"
+			},
+			"project": {
+				"id": 14411739,
+				"name": "backend",
+				"path_with_namespace": "facility-project/backend"
+			},
+			"object_attributes": {
+				"author_id": 15684224,
+				"id": 211678589,
+				"iid": 69,
+				"title": "CalDAV : certification en lecture sur dev",
+				"url": "https://gitlab.com/facility-project/backend/-/work_items/69",
+				"assignee_ids": [],
+				"assignee_id": null,
+				"state": "opened",
+				"action": "update"
+			},
+			"labels": [],
+			"repository": {
+				"name": "backend",
+				"url": "git@gitlab.com:facility-project/backend.git"
+			}
+		}
+		', true);
 	}
 
 	private function getIssueOpenGitlabPayloadString(): array
