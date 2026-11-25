@@ -12,6 +12,8 @@ repos:
       dateKey: adhstgkj3usbw5ne6kaziwrdhbh
       statusKey: adj7gm9wxsy1w61hfksxzkce75h
       statusValue: a59obmejixs19cefych19kyxmaw
+      # Status option id set when the issue is closed (statusValue is restored on reopen)
+      statusClosedValue: a8tezunxa49sf5dznxrp9rijf8o
       urlKey: a45oaj4wx8k6j5h9wbc769neqga
       assignedKey: asyzr433wkogfectua9rnh894zr
       durationKey: aqrhi4z86f7do8pkfa8gu686u3h

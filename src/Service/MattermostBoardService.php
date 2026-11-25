@@ -38,24 +38,15 @@ class MattermostBoardService
 
 	public function consume(array $issue): bool
 	{
-		$res = false;
-
 		$this->issue = $issue;
 
-		$action = $this->issue['action'] ?? null;
-
-		switch ($action) {
-			case 'open':
-			case 'opened':
-				$res = $this->createCard();
-				break;
-			case 'assigned':
-			case 'closed':
-			default:
-				break;
-		}
-
-		return $res;
+		// GitLab sends open/close/reopen, GitHub opened/closed/reopened
+		return match ($this->issue['action'] ?? null) {
+			'open', 'opened' => $this->createCard(),
+			'close', 'closed' => $this->updateCardState(true),
+			'reopen', 'reopened' => $this->updateCardState(false),
+			default => false,
+		};
 	}
 
 	public function getRepositories(): ?array
@@ -363,25 +354,123 @@ class MattermostBoardService
 		return null !== $cardId;
 	}
 
-	public function exportRepository(string $repository, ?\DateTime $dateMin, ?\DateTime $dateMax): ?array
+	/**
+	 * Set the status and the date range end of the cards linked to the issue url.
+	 */
+	private function updateCardState(bool $closed): bool
 	{
+		$statusConfigKey = $closed ? 'statusClosedValue' : 'statusValue';
+
 		if (!$this->loadConfig()) {
-			return null;
+			return false;
 		}
 
-		$authToken = $this->getAuthenticationToken();
-		if (null === $authToken) {
-			return null;
-		}
-
+		$repository = $this->issue['repository'];
 		if (!$this->setBoardConfig($repository)) {
-			return null;
+			return false;
 		}
 
 		$boardId = $this->getBoardId();
 		if ('' === $boardId || '0' === $boardId) {
-			return null;
+			return false;
 		}
+
+		$properties = $this->boardConfig['properties'];
+		$statusValue = $properties[$statusConfigKey] ?? '';
+		if ('' === $statusValue) {
+			$this->logger->warning('Mattermost board status not configured', [
+				'repository' => $repository,
+				'config_key' => $statusConfigKey,
+			]);
+
+			return false;
+		}
+
+		$authToken = $this->getAuthenticationToken();
+		if (null === $authToken) {
+			return false;
+		}
+
+		$cards = $this->getCards($boardId, $authToken);
+		if (null === $cards) {
+			return false;
+		}
+
+		$issueKey = self::getIssueKey($this->issue['url']);
+		$found = false;
+		foreach ($cards as $card) {
+			$cardUrl = $card['properties'][$properties['urlKey']] ?? null;
+			if (!is_string($cardUrl) || self::getIssueKey($cardUrl) !== $issueKey) {
+				continue;
+			}
+			$found = true;
+			$updatedProperties = $this->getStateUpdatedProperties($card['properties'], $statusValue, $closed);
+			if ([] === $updatedProperties) {
+				continue;
+			}
+			if (!$this->patchCard($card['id'], $updatedProperties, $authToken)) {
+				return false;
+			}
+		}
+
+		if (!$found) {
+			$this->logger->info('Mattermost card not found for issue', [
+				'url' => $this->issue['url'],
+			]);
+		}
+
+		return $found;
+	}
+
+	/**
+	 * Get the card properties to change: the status, and the date range end set on close, removed on reopen.
+	 */
+	private function getStateUpdatedProperties(array $cardProperties, string $statusValue, bool $closed): array
+	{
+		$properties = $this->boardConfig['properties'];
+		$res = [];
+
+		$statusKey = $properties['statusKey'];
+		if (($cardProperties[$statusKey] ?? null) !== $statusValue) {
+			$res[$statusKey] = $statusValue;
+		}
+
+		// Date property value is a json range, eg: {"from":1732000000000,"to":1732600000000}
+		$dateKey = $properties['dateKey'];
+		$dateInfo = $cardProperties[$dateKey] ?? null;
+		$date = is_string($dateInfo) ? json_decode($dateInfo, true) : null;
+		if (!is_array($date) || !isset($date['from'])) {
+			return $res;
+		}
+		if ($closed && !isset($date['to'])) {
+			$date['to'] = (int) round(microtime(true) * 1000);
+			$res[$dateKey] = json_encode($date);
+		} elseif (!$closed && isset($date['to'])) {
+			unset($date['to']);
+			$res[$dateKey] = json_encode($date);
+		}
+
+		return $res;
+	}
+
+	/**
+	 * Get a comparison key for an issue url, so that GitLab /-/issues/N and /-/work_items/N urls match.
+	 */
+	private static function getIssueKey(string $url): string
+	{
+		$url = strtolower(trim($url));
+		if (1 === preg_match('#^(.+?)(?:/-)?/(?:issues|work_items)/(\d+)/?(?:[?\#].*)?$#', $url, $matches)) {
+			return sprintf('%s#%s', $matches[1], $matches[2]);
+		}
+
+		return $url;
+	}
+
+	/**
+	 * Get all the cards of a board.
+	 */
+	private function getCards(string $boardId, string $authToken): ?array
+	{
 		$url = sprintf('%s/boards/%s/cards?page=0&per_page=0', $this->mattermostBoardApiUrl, $boardId);
 
 		try {
@@ -403,10 +492,77 @@ class MattermostBoardService
 
 			$data = json_decode($response->getContent(), true);
 		} catch (\Exception $e) {
-			$this->logger->error('Mattermost create card exception', [
+			$this->logger->error('Mattermost get cards exception', [
 				'message' => $e->getMessage(),
 			]);
 
+			return null;
+		}
+
+		return is_array($data) ? $data : null;
+	}
+
+	/**
+	 * Update some properties of a card.
+	 *
+	 * @see https://github.com/mattermost/focalboard/blob/main/server/api/cards.go PATCH /cards/{cardID}
+	 */
+	private function patchCard(string $cardId, array $updatedProperties, string $authToken): bool
+	{
+		$url = sprintf('%s/cards/%s', $this->mattermostBoardApiUrl, $cardId);
+
+		try {
+			$response = $this->client->request('PATCH', $url, [
+				'headers' => [
+					'Authorization' => sprintf('Bearer %s', $authToken),
+					'X-Requested-With' => 'XMLHttpRequest',
+				],
+				'json' => ['updatedProperties' => $updatedProperties],
+			]);
+
+			$statusCode = $response->getStatusCode();
+			if (Response::HTTP_OK !== $statusCode) {
+				$this->logger->error('Mattermost patch card error', [
+					'status_code' => $statusCode,
+					'card_id' => $cardId,
+				]);
+
+				return false;
+			}
+		} catch (\Exception $e) {
+			$this->logger->error('Mattermost patch card exception', [
+				'message' => $e->getMessage(),
+				'card_id' => $cardId,
+			]);
+
+			return false;
+		}
+
+		return true;
+	}
+
+	public function exportRepository(string $repository, ?\DateTime $dateMin, ?\DateTime $dateMax): ?array
+	{
+		if (!$this->loadConfig()) {
+			return null;
+		}
+
+		$authToken = $this->getAuthenticationToken();
+		if (null === $authToken) {
+			return null;
+		}
+
+		if (!$this->setBoardConfig($repository)) {
+			return null;
+		}
+
+		$boardId = $this->getBoardId();
+		if ('' === $boardId || '0' === $boardId) {
+			return null;
+		}
+
+		$data = $this->getCards($boardId, $authToken);
+		if (null === $data) {
 			return null;
 		}
 

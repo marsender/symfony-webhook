@@ -1,0 +1,28 @@
+users:
+  marsender: user-marsender
+
+repos:
+  board-closable:
+    boardId: board-1
+    properties:
+      dateKey: date-key
+      statusKey: status-key
+      statusValue: status-todo
+      statusClosedValue: status-done
+      urlKey: url-key
+      assignedKey: assigned-key
+      durationKey: duration-key
+
+  board-no-closed-status:
+    boardId: board-2
+    properties:
+      dateKey: date-key
+      statusKey: status-key
+      statusValue: status-todo
+      urlKey: url-key
+      assignedKey: assigned-key
+      durationKey: duration-key
+
+  facility-project/backend: board-closable
+  marsender/symfony-webhook: board-closable
+  marsender/legacy: board-no-closed-status

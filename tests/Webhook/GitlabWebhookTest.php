@@ -16,6 +16,7 @@ class GitlabWebhookTest extends AbstractWebhookTestCase
 		return [
 			$this->getIssueOpenGitlabPayloadString(),
 			$this->getIssueUpdateUnassignedGitlabPayload(),
+			$this->getIssueCloseGitlabPayload(),
 		];
 	}
 
@@ -53,6 +54,40 @@ class GitlabWebhookTest extends AbstractWebhookTestCase
 				"assignee_id": null,
 				"state": "opened",
 				"action": "update"
+			},
+			"labels": [],
+			"repository": {
+				"name": "backend",
+				"url": "git@gitlab.com:facility-project/backend.git"
+			}
+		}
+		', true);
+	}
+
+	private function getIssueCloseGitlabPayload(): array
+	{
+		return json_decode('
+		{
+			"object_kind": "issue",
+			"event_type": "issue",
+			"user": {
+				"id": 15684224,
+				"name": "Didier Corbière",
+				"username": "marsender"
+			},
+			"project": {
+				"id": 14411739,
+				"name": "backend",
+				"path_with_namespace": "facility-project/backend"
+			},
+			"object_attributes": {
+				"author_id": 15684224,
+				"id": 211678585,
+				"iid": 65,
+				"title": "Closed issue",
+				"url": "https://gitlab.com/facility-project/backend/-/work_items/65",
+				"state": "closed",
+				"action": "close"
 			},
 			"labels": [],
 			"repository": {
